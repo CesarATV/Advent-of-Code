@@ -1,0 +1,1 @@
+Solutions made for Advent of Code 2022 (https://adventofcode.com/2022/about), an Advent calendar of programming puzzles. These solutions are currently missing days 16, 19 and 24.
