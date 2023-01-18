@@ -1,1 +1,3 @@
-Solutions made for Advent of Code 2022 (https://adventofcode.com/2022/about), an Advent calendar of programming puzzles. These solutions are currently missing days 16, 19 and 24.
+Solutions made for Advent of Code 2022 (https://adventofcode.com/2022/about), an Advent calendar of programming puzzles. The solutions are currently missing days 19 and 24.
+
+The content of the Python files and the Jupyter Notebook file is mostly the same. The code was primarily developed in the notebook, but as the puzzles became longer and more complicated, part was developed in Python files. For tidiness (and avoiding abusing global variables, very easy to use in the notebook), part of the code was moved to the Python files, although there are still some files to be rewritten from the notebook.
