@@ -1,3 +1,9 @@
-Solutions made for Advent of Code 2022 (https://adventofcode.com/2022/about), an Advent calendar of programming puzzles. The solutions are currently missing days 19 and 24.
+This repository contains the programmed solutions made for [Advent of Code](https://adventofcode.com/about). Advent of Code is an Advent calendar of programming puzzles, offering 25 puzzles per year, one for each Advent-calendar day. 
 
-The content of the Python files and the Jupyter Notebook file is mostly the same. The code was primarily developed in the notebook, but as the puzzles became longer and more complicated, part was developed in Python files. For tidiness (and avoiding abusing global variables, very easy to use in the notebook), part of the code was moved to the Python files, although there are still some files to be rewritten from the notebook.
+The puzzles, which are accompanied by amusing Christmas stories, are very entertaining, spark discussions and can help to refine programming skills. They are divided in two parts, of which the second part is usually a more complex version of the first. Generally, the puzzles also grow in difficulty from day 1 to day 25, varying, for example, from simply requiring multiple if statements to requiring to solve traveling-salesman-like problems.
+<br/>
+
+The puzzles are solved taking input files found on the Advent of Code website. Each puzzle also provides examples, which can be useful to test the programmed solutions. The input files, both the example and the main puzzle files, are not published in this public repository, as the creator of Advent of Code asks to not share them. They can easily be found on the Advent of Code website.
+<br/>
+
+Currently, the solutions in this repository are for some of the puzzles from the Advent calendars of 2015, 2021 and 2022, programmed in C++, Rust and Python, respectively. The programs, present in the folders with the corresponding year as name, assume that there is a subfolder *puzzleInputs* with files named *dayX.txt*, where *X* is the number of the puzzle. These files are read by default when executing the programs. All programs also can use other default example files (named *dayX_example.txt*) instead of the main defaults, by passing a single argument. If a second argument is given, this will be used as file path instead.

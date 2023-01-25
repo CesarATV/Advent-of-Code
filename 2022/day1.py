@@ -1,21 +1,22 @@
 import argparse
 import numpy as np
 
-PUZZLE_INPUT_FILE_NAME = "PuzzleInputs/day1.txt"
-PUZZLE_EXAMPLE_INPUT_FILE_NAME = "PuzzleInputs/day1_example.txt"
+PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day1.txt"
+PUZZLE_EXAMPLE_INPUT_FILE_NAME = "puzzleInputs/day1_example.txt"
 
-NUMBER_ELVES = 3
+NUMBER_OF_ELVES = 3
 
 
 def parse_file_name():
-    parser = argparse.ArgumentParser(description="AoC day 1")
-    parser.add_argument('file_name', type=str, default=PUZZLE_INPUT_FILE_NAME, nargs='?')
-    parser.add_argument("-e", "--example", dest="use_example_file", action="store_true", help="use default (hardcoded) path of example file as file name")
+    parser = argparse.ArgumentParser(description="Advent of Code Day 1: Calorie Counting")
+    parser.add_argument("file_name", type=str, nargs='*', help="if no arguments are given, use default (hardcoded) file path. If one argument is given, use default example path. If at least 2 arguments are given, use second as path")
     args = parser.parse_args()
-    if args.use_example_file == True:
+    if args.file_name == []:
+        return PUZZLE_INPUT_FILE_NAME
+    elif len(args.file_name) == 1:
         return PUZZLE_EXAMPLE_INPUT_FILE_NAME
     else:
-        return args.file_name
+        return args.file_name[1]
 
 
 def first_part(lines):
@@ -34,7 +35,7 @@ def first_part(lines):
 
 
 def second_part(lines):
-    most_calories_array = np.zeros(NUMBER_ELVES,dtype=int)
+    most_calories_array = np.zeros(NUMBER_OF_ELVES,dtype=int)
     current_calories = 0
     for line in lines:
         if line == '':
@@ -57,7 +58,6 @@ def main(file_name):
 
     first_part(lines)
     second_part(lines)
-
 
 
 if __name__ == "__main__":

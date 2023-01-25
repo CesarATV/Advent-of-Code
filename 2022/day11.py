@@ -4,8 +4,8 @@ import numpy as np
 import enum
 from dataclasses import dataclass
 
-PUZZLE_INPUT_FILE_NAME = "PuzzleInputs/day11.txt"
-PUZZLE_EXAMPLE_INPUT_FILE_NAME = "PuzzleInputs/day11_example.txt"
+PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day11.txt"
+PUZZLE_EXAMPLE_INPUT_FILE_NAME = "puzzleInputs/day11_example.txt"
 
 
 MONKEY_TEXT_LENGTH = 7
@@ -29,14 +29,15 @@ class Monkey:
 
 
 def parse_file_name():
-    parser = argparse.ArgumentParser(description="AoC day 11")
-    parser.add_argument('file_name', type=str, default=PUZZLE_INPUT_FILE_NAME, nargs='?')
-    parser.add_argument("-e", "--example", dest="use_example_file", action="store_true", help="use default (hardcoded) path of example file as file name")
+    parser = argparse.ArgumentParser(description="Advent of Code Day 11: Monkey in the Middle")
+    parser.add_argument("file_name", type=str, nargs='*', help="if no arguments are given, use default (hardcoded) file path. If one argument is given, use default example path. If at least 2 arguments are given, use second as path")
     args = parser.parse_args()
-    if args.use_example_file == True:
+    if args.file_name == []:
+        return PUZZLE_INPUT_FILE_NAME
+    elif len(args.file_name) == 1:
         return PUZZLE_EXAMPLE_INPUT_FILE_NAME
     else:
-        return args.file_name
+        return args.file_name[1]
 
 
 
@@ -161,7 +162,7 @@ def second_part(monkey_list):
 def main(file_name): 
     with open(file_name) as file:
         lines = file.read().splitlines()
-    while(lines[-1] == ""): # remove last empty lines, if any, they do not add information and can cause confusion
+    while(lines[-1] == ""): # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
     monkey_list = parse_puzzle_file(lines)
@@ -171,5 +172,3 @@ def main(file_name):
 
 if __name__ == "__main__":
     main(parse_file_name())
-
-

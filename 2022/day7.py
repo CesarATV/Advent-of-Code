@@ -1,7 +1,7 @@
 import argparse
 
-PUZZLE_INPUT_FILE_NAME = "PuzzleInputs/day7.txt"
-PUZZLE_EXAMPLE_INPUT_FILE_NAME = "PuzzleInputs/day7_example.txt"
+PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day7.txt"
+PUZZLE_EXAMPLE_INPUT_FILE_NAME = "puzzleInputs/day7_example.txt"
 
 MAXIMUM_ALLOWED_SIZE = 100000
 
@@ -10,14 +10,15 @@ MAXIMUM_SPACE = 70000000
 
 
 def parse_file_name():
-    parser = argparse.ArgumentParser(description="AoC day 7")
-    parser.add_argument('file_name', type=str, default=PUZZLE_INPUT_FILE_NAME, nargs='?')
-    parser.add_argument("-e", "--example", dest="use_example_file", action="store_true", help="use default (hardcoded) path of example file as file name")
+    parser = argparse.ArgumentParser(description="Advent of Code Day 7: No Space Left On Device")
+    parser.add_argument("file_name", type=str, nargs='*', help="if no arguments are given, use default (hardcoded) file path. If one argument is given, use default example path. If at least 2 arguments are given, use second as path")
     args = parser.parse_args()
-    if args.use_example_file == True:
+    if args.file_name == []:
+        return PUZZLE_INPUT_FILE_NAME
+    elif len(args.file_name) == 1:
         return PUZZLE_EXAMPLE_INPUT_FILE_NAME
     else:
-        return args.file_name
+        return args.file_name[1]
 
 
 
@@ -122,14 +123,13 @@ def second_part(device_directory):
 def main(file_name): 
     with open(file_name) as file:
         lines = file.read().splitlines()
-    while(lines[-1] == ""): # remove last empty lines, if any, they do not add information and can cause confusion
+    while(lines[-1] == ""): # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
     device_directory = DeviceDirectory(lines)
 
     first_part(device_directory)
     second_part(device_directory)
-
 
 
 if __name__ == "__main__":

@@ -1,20 +1,22 @@
 import argparse
 
-PUZZLE_INPUT_FILE_NAME = "PuzzleInputs/day6.txt"
-PUZZLE_EXAMPLE_INPUT_FILE_NAME = "PuzzleInputs/day6_example.txt"
+PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day6.txt"
+PUZZLE_EXAMPLE_INPUT_FILE_NAME = "puzzleInputs/day6_example.txt"
 
 N_UNIQUE_CHARACTERS_FOR_PACKAGE = 4
 N_UNIQUE_CHARACTERS_FOR_MESSAGE = 14
 
+
 def parse_file_name():
-    parser = argparse.ArgumentParser(description="AoC day 6")
-    parser.add_argument('file_name', type=str, default=PUZZLE_INPUT_FILE_NAME, nargs='?')
-    parser.add_argument("-e", "--example", dest="use_example_file", action="store_true", help="use default (hardcoded) path of example file as file name")
+    parser = argparse.ArgumentParser(description="Advent of Code Day 6: Tuning Trouble")
+    parser.add_argument("file_name", type=str, nargs='*', help="if no arguments are given, use default (hardcoded) file path. If one argument is given, use default example path. If at least 2 arguments are given, use second as path")
     args = parser.parse_args()
-    if args.use_example_file == True:
+    if args.file_name == []:
+        return PUZZLE_INPUT_FILE_NAME
+    elif len(args.file_name) == 1:
         return PUZZLE_EXAMPLE_INPUT_FILE_NAME
     else:
-        return args.file_name
+        return args.file_name[1]
 
 
 def check_if_all_characters_are_different(character_list):
@@ -71,7 +73,6 @@ def main(file_name):
 
     first_part(file_contents)
     second_part(file_contents)
-
 
 
 if __name__ == "__main__":

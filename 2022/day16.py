@@ -6,15 +6,14 @@ The nodes are evaluated in order so that valves with more flow rate are visited 
 The second part is similar to the first, generating in this case combinations that lead to many pairs of possible paths that are also evaluated by the breadth-first-search function. The used algorithm was not programmed to be greedy, making this part very long to compute: It can take around half an hour to compute (for the non-example input). However, the correct result is known in seconds, as the program visites pairs of pairs that divide the work equally between the two epxlorers, so that one does not visit 1 valve while the other visits 19, as this combination is in principle less effective than dividing the work equally. Although these options are (highly) unlikely to give the ideal result, the program covers them. The current maximum pressure is printed before the end of the program to look at the, very likely to be, correct result
 """
 
-
 import argparse
-import math
+import numpy as np
 import copy
 import itertools
 from dataclasses import dataclass
 
-PUZZLE_INPUT_FILE_NAME = "PuzzleInputs/day16.txt"
-PUZZLE_EXAMPLE_INPUT_FILE_NAME = "PuzzleInputs/day16_example.txt"
+PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day16.txt"
+PUZZLE_EXAMPLE_INPUT_FILE_NAME = "puzzleInputs/day16_example.txt"
 
 STARTING_VALVE = "AA"
 N_MINUTES = 30
@@ -35,14 +34,15 @@ class ValvePathParameters:
 
 
 def parse_file_name():
-    parser = argparse.ArgumentParser(description="AoC day 16")
-    parser.add_argument('file_name', type=str, default=PUZZLE_INPUT_FILE_NAME, nargs='?')
-    parser.add_argument("-e", "--example", dest="use_example_file", action="store_true", help="use default (hardcoded) path of example file as file name")
+    parser = argparse.ArgumentParser(description="Advent of Code Day 16: Proboscidea Volcanium")
+    parser.add_argument("file_name", type=str, nargs='*', help="if no arguments are given, use default (hardcoded) file path. If one argument is given, use default example path. If at least 2 arguments are given, use second as path")
     args = parser.parse_args()
-    if args.use_example_file == True:
+    if args.file_name == []:
+        return PUZZLE_INPUT_FILE_NAME
+    elif len(args.file_name) == 1:
         return PUZZLE_EXAMPLE_INPUT_FILE_NAME
     else:
-        return args.file_name
+        return args.file_name[1]
 
 
 def parse_puzzle_file(lines):
@@ -85,7 +85,7 @@ def map_valve(parent_valve, current_path_list, flow_rate_dict, valve_dict):
 def map_every_valve(flow_rate_dict, valve_dict):
     for valve in valve_dict.values():
         for target_valve_name in flow_rate_dict:
-            valve.valve_routes_dict[target_valve_name] = math.inf
+            valve.valve_routes_dict[target_valve_name] = np.inf
 
     # make a map of the full valve layout, doing it from every relevant valve (the ones with flow rate bigger than 0 and the starting valve)
     map_valve(valve_dict[STARTING_VALVE], [STARTING_VALVE], flow_rate_dict, valve_dict)
@@ -201,9 +201,9 @@ def second_part(flow_rate_dict, valve_dict):
 
 
 def main(file_name):    
-    with open(PUZZLE_EXAMPLE_INPUT_FILE_NAME) as file:
+    with open(file_name) as file:
         lines = file.read().splitlines()
-    while(lines[-1] == ""): # remove last empty lines, if any, they do not add information and can cause confusion
+    while(lines[-1] == ""): # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
 
