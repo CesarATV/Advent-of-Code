@@ -5,15 +5,15 @@ const PUZZLE_EXAMPLE_INPUT_FILE_NAME: &str = "puzzleInputs/day5_example.txt";
 fn parse_puzzle_line(line: &str) -> (i32, i32, i32, i32) {
     let split_line: Vec<&str> = line.split_whitespace().collect();
 
-        let begin_coordinates: Vec<&str> = split_line[0].split(",").collect();
-        let x_begin: i32 = begin_coordinates[0].parse::<i32>().expect("Not a number");
-        let y_begin: i32 = begin_coordinates[1].parse::<i32>().expect("Not a number");
+    let begin_coordinates: Vec<&str> = split_line[0].split(",").collect();
+    let x_begin: i32 = begin_coordinates[0].parse::<i32>().expect("Not a number");
+    let y_begin: i32 = begin_coordinates[1].parse::<i32>().expect("Not a number");
         
-        let end_coordinates: Vec<&str> = split_line[2].split(",").collect();
-        let x_end: i32 = end_coordinates[0].parse::<i32>().expect("Not a number");
-        let y_end: i32 = end_coordinates[1].parse::<i32>().expect("Not a number");
+    let end_coordinates: Vec<&str> = split_line[2].split(",").collect();
+    let x_end: i32 = end_coordinates[0].parse::<i32>().expect("Not a number");
+    let y_end: i32 = end_coordinates[1].parse::<i32>().expect("Not a number");
 
-        (x_begin, y_begin, x_end, y_end)
+    (x_begin, y_begin, x_end, y_end)
 }
 
 

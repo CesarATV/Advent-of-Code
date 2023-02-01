@@ -36,7 +36,7 @@ fn first_part(file_contents: &str, n_days: usize) {
 }
 
 fn second_part(file_contents: &str, n_days: usize){
-    //  This function is made just for consistency (having a first_parth and second_part functions in all files of the project), as calling it is wasteful in comparison to just calling the function first_part
+    //  This function is made just for consistency (having a first_parth and second_part functions in all files of the project), as it only calls first_part
     first_part(file_contents, n_days);
 }
 

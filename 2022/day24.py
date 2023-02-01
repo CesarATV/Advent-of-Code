@@ -19,7 +19,7 @@ def parse_file_name():
 
 
 def parse_puzzle_file(lines):
-    n_rows = len(lines) + 2 # 2 extra rows are considered in order to take into account the borders of the map. These border will be marked as impossible to access in further functions
+    n_rows = len(lines) + 2 # 2 extra rows are considered in order to take into account the borders of the map. These borders will be marked as impossible to access in further functions
     n_cols = len(lines[0])
     starting_position = np.array([1, lines[0].find(".")])
     ending_position = np.array([n_rows-2, lines[-1].find(".")])
@@ -49,7 +49,7 @@ def parse_puzzle_file(lines):
 
 def get_blizzard_map_over_time(starting_position, ending_position, n_rows, n_cols, left_blizzards, right_blizzards, up_blizzards, down_blizzards):
     ''' 
-    Create a map representing which cells are covered by a blizzard in each time instant. The maximum time considered is the least common multiple of the number of rows and columns, as this number warantees to fully cover all blizzard periods
+    Create a map representing which cells are covered by a blizzard in each time instant. The maximum time considered is the common multiple of the number of rows and columns, as this number warantees to fully cover all blizzard periods
     '''
 
     time_until_blizzards_loop = np.lcm(n_rows-4,n_cols-2) # the blizzards can move in all the map except on the borders
@@ -89,7 +89,6 @@ def get_blizzard_map_over_time(starting_position, ending_position, n_rows, n_col
     
     return covered_by_blizzard_map
     
-
 
 
 

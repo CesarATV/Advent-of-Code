@@ -59,7 +59,7 @@ void parse_puzzle_line(LightInstruction *light_instruction, uint *beginning_row,
 
 
 /**
- * The solution implemented in this function is an overkill, it could have been implemented in a more simple and (maybe) more efficient way followign th structure of the function second_part: Iterating over every light in the grid altering its status according to the line instructions, and then just reading the final status
+ * The solution implemented in this function is an overkill, it could have been implemented in a more simple and (maybe) more efficient way followign the structure of the function second_part: Iterating over every light in the grid altering its status according to the line instructions, and then just reading the final status
  * This function iterates over the lines of the file from the end to the beginning. This is to save some time processing more lights than necessary: As soon as one light is declared on or off, it will remain in the corresponding fixed status, independently of previous (from the beginning of the file) lines. Therefore, once a light reaches a fixed status there is no need to process that light anymore.
  * The switch statements only matter for the non-explicitely-turned-on-or-off lights  
  */

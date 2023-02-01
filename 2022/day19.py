@@ -12,7 +12,6 @@ Note: The puzzle instructions, although not totally and completely explicitly, s
 import argparse
 import copy
 import numpy as np
-import enum
 from dataclasses import dataclass
 
 PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day19.txt"
@@ -47,25 +46,6 @@ class BlueprintCosts:
     geode_robot_cost_ore: int
     geode_robot_cost_obsidian: int
 
-
-class RobotActionTypes(enum.Enum):
-    DO_NOTHING = enum.auto()
-    ORE_ROBOT = enum.auto()
-    CLAY_ROBOT = enum.auto()
-    OBSIDIAN_ROBOT = enum.auto()
-    GEODE_ROBOT = enum.auto()
-
-
-@dataclass 
-class RobotBuildingParameters:
-    n_minutes_left: int
-    n_ore: int
-    n_clay: int
-    n_obsidian: int
-    n_geode: int
-
-    list_of_actions: list
-    next_action: int
 
 
 def parse_puzzle_file(lines):
@@ -113,7 +93,7 @@ class RobotBuildingPath:
         self.n_max_clay_robots = blueprint.obsidian_robot_cost_clay
         self.n_max_obsidian_robots = blueprint.geode_robot_cost_obsidian
 
-        # flags that prevent building a robot if in the previous turn that robot could have been built, and instead no robot at all was built
+        # flags that prevent building a robot if in the previous turn that robot could have been built and instead no robot at all was built
         self.could_have_bought_obsidian_robot_but_did_nothing = False
         self.could_have_bought_ore_robot_but_did_nothing = False
         self.could_have_bought_clay_robot_but_did_nothing = False
@@ -200,9 +180,11 @@ def first_part(blueprint_list, n_minutes_to_consider=N_MINUTES, print_result=Tru
                 # it does not matter what is built, there is no time to use it
                 continue
 
-            # the nothing_done_robot_path is appended first, as in principle will be less efficient than paths where something is build
-            nothing_done_robot_path = current_robot_path
-            robot_path_list.append(nothing_done_robot_path)
+            # the nothing_done_robot_path is appended first, as in principle will be less efficient than paths where something is built
+            if can_buy_geode_robot == False:
+                # it is not possible that not doing anything is better than building a geode robot, so this is only executed if no geode robot can be built
+                nothing_done_robot_path = current_robot_path
+                robot_path_list.append(nothing_done_robot_path)
 
             if can_buy_ore_robot and current_robot_path.could_have_bought_ore_robot_but_did_nothing == False:
                 robot_path_list.append(current_robot_path.build_ore_robot())
