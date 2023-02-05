@@ -2,7 +2,7 @@
 /// The first part of the puzzle asks to find the position of what would be the median of the positions.
 /// 
 /// The second part introduces another formula for fuel comsumption. By calling x the position of any crab and p the target position in which the crabs should be moved, and \sum a sumatory over all N crabs, the fuel comsumption can be calculated as \sum( ((x-p)^{2} + abs(x-p)) / 2).
-///  Representing the derivative with ′, the derivative of leftmost term of the summatory is  (\sum( (x-p)^{2} / 2))′ =  \sum( x-p ) =  \sum(x) -p*N. Setting it to 0 to find the ideal minimum comsumption, the result is the definition of the mean value: p = \sum(x)/N
+/// Representing the derivative with ′, the derivative of leftmost term of the summatory is  (\sum( (x-p)^{2} / 2))′ =  \sum( x-p ) =  \sum(x) -p*N. Setting it to 0 to find the ideal minimum comsumption, the result is the definition of the mean value: p = \sum(x)/N
 /// The derivative of the rightmost term of the original equation, when ignoring the case (x-p) = 0, is (\sum( abs(x-p) / 2 ))′ = \sum( sign(x-p) / 2 ). When setting it to 0, finding the ideal value of p is less simple than with the lefmost equation. Even when the rightmost and lefmost derivatives are added together to find the ideal p shared between then.
 /// However, the rightmost derivative can have a minimum value of -0.5 (if all x-p are negative) and a maximum value of 0.5 (if all x-p are positive). Therefore, by using only the lefmost equation it is possible to find the ideal value of p with a marging of error of +-0.5. As the positions are discrete numbers, the ideal position has to be the ceiled or the floored positions around the mean. This reasoning is used to solve the second part
 /// 
@@ -12,7 +12,6 @@ const PUZZLE_EXAMPLE_INPUT_FILE_NAME: &str = "puzzleInputs/day7_example.txt";
 
 
 fn first_part(file_contents: &str) {
-
     let mut positions_vector: Vec<i32> = file_contents.split(",").map(|x: &str| x.parse::<i32>().expect("Not a number in file lines")).collect();
     positions_vector.sort();
 
@@ -31,7 +30,7 @@ fn first_part(file_contents: &str) {
 
 
 fn second_part(file_contents: &str) {
-    // as explained at the top of the file, the function uses the mean value to find the possible ideal positions (either the ceil or floor of that value) that give the minimum amount of fuel
+    // as explained at the top of the file, this function uses the mean value to find the possible ideal positions (either the ceil or floor of that value) that give the minimum amount of fuel
 
     let positions_vector: Vec<i32> = file_contents.split(",").map(|x: &str| x.parse::<i32>().expect("Not a number in file lines")).collect();
 
@@ -39,8 +38,8 @@ fn second_part(file_contents: &str) {
     let mean_position_ceiled: i32 = f32::ceil(mean_position) as i32;
     let mean_position_floored: i32 = f32::floor(mean_position) as i32;
 
-    let fuel_cost_of_ceiled_position: i32 = positions_vector.iter().map(|x: &i32| (1..=((x-mean_position_ceiled).abs())).sum::<i32>() ).sum();
-    let fuel_cost_of_floored_position: i32 = positions_vector.iter().map(|x: &i32| (1..=((x-mean_position_floored).abs())).sum::<i32>() ).sum();
+    let fuel_cost_of_ceiled_position: i32 = positions_vector.iter().map(|x: &i32| ( 1..=(x-mean_position_ceiled).abs() ).sum::<i32>()).sum();
+    let fuel_cost_of_floored_position: i32 = positions_vector.iter().map(|x: &i32| ( 1..=(x-mean_position_floored).abs() ).sum::<i32>()).sum();
     
     let (fuel_cost, best_position): (i32, i32) = if fuel_cost_of_floored_position < fuel_cost_of_ceiled_position {
         (fuel_cost_of_floored_position, mean_position_floored)
