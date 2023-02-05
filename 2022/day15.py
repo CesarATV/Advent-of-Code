@@ -137,7 +137,7 @@ def second_part(lines, maximum_coordinate_position=MAXIMUM_COORDINATE_POSITION):
 def main(file_name, using_example_file=False):    
     with open(file_name) as file:
         lines = file.read().splitlines()
-    while(lines[-1] == ""): # remove last empty lines, if any. They do not add information and can cause confusion
+    while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
     if using_example_file==False:

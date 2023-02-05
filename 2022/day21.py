@@ -32,7 +32,7 @@ def parse_file_name():
 def parse_puzzle_file(file_contents):
     stacked_lines = file_contents
     lines = stacked_lines.splitlines()
-    while(lines[-1] == ""): # remove last empty lines, if any. They do not add information and can cause confusion
+    while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
         stacked_lines = stacked_lines[:-1]
 

@@ -82,10 +82,11 @@ def first_part(lines):
 def main(file_name): 
     with open(file_name) as file:
         lines = file.read().splitlines()
-    while(lines[-1] == ""): # remove last empty lines, if any. They do not add information and can cause confusion
+    while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
     first_part(lines)
+    # there is no second part to be coded for this puzzle
 
 
 if __name__ == "__main__":

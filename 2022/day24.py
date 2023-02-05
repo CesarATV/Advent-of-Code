@@ -1,3 +1,8 @@
+'''
+The implemented solution is a depth-first search approach that takes into account all paths until finding the shortest. The solution takes advantage of the fact that the blizzards are cyclical. This fact is used to determine when a path has to be cut out because it has already been visited in a previous-looped instant. It is also used to keep all the movements of the blizzard stored into memory as a function of time, avoiding to calculate them for every single time step in each single path.
+To reduce the number of paths to visit, the current time that a path is taking to finish is compared to the current minimum time for an already finished path. If the current time is equal or bigger than this minimum, the path can be ignored.
+'''
+
 import argparse
 import numpy as np
 
@@ -208,7 +213,7 @@ def second_part(starting_position, ending_position, covered_by_blizzard_map, n_m
 def main(file_name):    
     with open(file_name) as file:
         lines = file.read().splitlines()
-    while(lines[-1] == ""): # remove last empty lines, if any. They do not add information and can cause confusion
+    while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
 

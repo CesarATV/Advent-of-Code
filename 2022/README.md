@@ -11,8 +11,8 @@ As mentioned in the README of the parent folder, the Python programs assume that
 Additionally, day15.py accepts an additional argument, *-e*, to specify that the given file path is an example file, as this day in particular changes some of the constant variables depending on if the file is an example file or not.
 <br /><br />
 
-*data_visualizations.ipynb* shows some simple plots made from data from Day 17 and Day 18. *untidy_day14_day22.ipynb* has the (slightly untidy) code used to solve the puzzles of day 14 and 22. The solutions are in a Jupyter Notebook as they were made there and they have not yet been moved to individual Python files. The second part of Day 14 could benefit from being rewritten in order to make the code less slow to compute.
+*data_visualizations.ipynb* shows some simple plots made from data from Day 17 and Day 18. The solutions are in a Jupyter Notebook as they were made there and they have not yet been moved to individual Python files.
 
-Besides the second part of Day 14, and the second part of Day 23, all programs should give a solution (compute) in less than a minute. The second part of day 16 very likely produces the solution in less than a minute, but the program takes longer to finish as it also checks very unlikely possibilities.
+Besides the second part of Day 16 and Day 23, all programs should give a solution (compute) in less than a minute. The second part of day 16 very likely produces the solution in less than a minute, but the program takes longer to finish as it also checks very unlikely possibilities.
 
-It was considered to use deques, but no situation were they could outperform lists was noticed. In a few cases lists were used in places where sets could have been slightly more efficient.
+It was considered to use deques, but no situation were they could outperform lists was noticed. In a few cases lists were used in places where sets or tuples could have been more efficient.

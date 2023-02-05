@@ -1,5 +1,4 @@
 import argparse
-import numpy as np
 
 PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day1.txt"
 PUZZLE_EXAMPLE_INPUT_FILE_NAME = "puzzleInputs/day1_example.txt"
@@ -35,20 +34,23 @@ def first_part(lines):
 
 
 def second_part(lines):
-    most_calories_array = np.zeros(NUMBER_OF_ELVES,dtype=int)
+    most_calories_array = [0 for _ in range(NUMBER_OF_ELVES)]
     current_calories = 0
     for line in lines:
         if line == '':
-            most_calories = np.min(most_calories_array) # in order to have all maxima in this array, the minimum value in the array is the one that has to compete against the possible new maximum
-            if(current_calories > most_calories):
-                most_calories_array[np.argmin(most_calories_array)] = current_calories
+            if(current_calories > most_calories_array[0]):
+                most_calories_array[0] = current_calories
+                most_calories_array.sort() # place the lowest amount of calories at the beginning of the array
             current_calories = 0
                 
         else:
             current_calories += int(line)
 
-
-    print("The three most carried calories combined add to", np.sum(most_calories_array))
+    sum_most_carried_calories = sum(most_calories_array)
+    print("The {} Elves that carry most calories carry a total of {}. They carry {}".format(NUMBER_OF_ELVES,sum_most_carried_calories,most_calories_array[0]), end='')
+    for elve_idx in range(1,NUMBER_OF_ELVES-1):
+        print(", {}".format(most_calories_array[elve_idx]), end='')
+    print(" and {} calories".format(most_calories_array[-1]))
 
 
 def main(file_name):    
