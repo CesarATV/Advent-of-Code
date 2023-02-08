@@ -1,3 +1,12 @@
+'''
+For the second part, the amount of cells in which to search for a beacon is very large, a layout of 4000000 by 4000000.
+
+A solution for the problem could be to see which cells are iluminated by every beacon. However, the given layout requires to create a 4000000 by 4000000 array, which requires an absurd amount of memory (over the terabyte if ignoring possible compression techniques), and an also absurd amount of time to iterate through it.
+A more appropiate solution without the need of storage is to check if every cell is iluminated by a beacon, although it also suffers from the problem of absurdly high iteration times.
+To avoid such a long iteration and taking advantage of the fact that only one cell in the whole layout is going to be non-iluminated, it is possible to iterate over only a set of cells more likely to have the target beacon. These cells are the cells immediately after the range of a beacon (so, the borders of the area iluminated by the beacon). In such a compressed layout, the target beacon has to be squeezed between two sensors, and therefore in these borders.
+'''
+
+
 import argparse
 import numpy as np
 from dataclasses import dataclass
@@ -131,7 +140,7 @@ def second_part(lines, maximum_coordinate_position=MAXIMUM_COORDINATE_POSITION):
         print("Beacon found at [{},{}] with a tuning frequency of {}".format(target_beacon_x,target_beacon_y,tuning_frequency))
 
     else:
-        print("Beacon not found. This option should never happen (is the argument parsing option to use the parameters that correspond to example file, or not, correctly set?)")
+        print("Beacon not found. This option should never happen...Is the argument parsing option to use the parameters that correspond to example file, or not, correctly set (try --help)?")
 
 
 def main(file_name, using_example_file=False):    
@@ -141,11 +150,14 @@ def main(file_name, using_example_file=False):
         lines.pop()
 
     if using_example_file==False:
-        first_part(lines, ROW_OF_INTEREST)
-        second_part(lines, MAXIMUM_COORDINATE_POSITION)
+        row_of_interest = ROW_OF_INTEREST
+        maximum_coordinate_position = MAXIMUM_COORDINATE_POSITION
     else:
-        first_part(lines, ROW_OF_INTEREST_EXAMPLE_FILE)
-        second_part(lines, MAXIMUM_COORDINATE_POSITION_EXAMPLE_FILE)
+        row_of_interest = ROW_OF_INTEREST_EXAMPLE_FILE
+        maximum_coordinate_position = MAXIMUM_COORDINATE_POSITION_EXAMPLE_FILE
+
+    first_part(lines, row_of_interest)
+    second_part(lines, maximum_coordinate_position)
 
 
 if __name__ == "__main__":

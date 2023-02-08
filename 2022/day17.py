@@ -31,6 +31,7 @@ BEGINNING_HEIGHT = 3
 
 N_FALLING_ROCKS = 2022
 N_FALLING_ROCKS_PART2 = 1000000000000
+ARBITRARY_HIGH_NUMBER_TO_BEGIN_TO_LOOK_FOR_A_PATTERN = 200
 
 
 def parse_file_name():
@@ -61,10 +62,10 @@ class FallingRock():
 
     def check_rock_blockedness(self, combinations_in_conflict):
         movement_is_possible = True
-        for width_point, heigh_point in combinations_in_conflict:
-            blocked_xs = self.blocked_positions[self.blocked_positions[:,1] == heigh_point][:,0]
-            if( not np.all(blocked_xs != width_point )):
+        for position in combinations_in_conflict:
+            if position in self.blocked_positions:
                 movement_is_possible = False
+                return movement_is_possible
   
         return movement_is_possible
 
@@ -73,7 +74,7 @@ class FallingRock():
         self.prepare_falling_rock(current_top_rock_height)
         
         has_rock_stacked = False
-        while(has_rock_stacked == False):
+        while has_rock_stacked == False:
             jet = self.jet_pattern[jet_pattern_idx]
             unlooped_jet_pattern_idx += 1
             independent_jet_pattern_idx += 1
@@ -88,7 +89,7 @@ class FallingRock():
 
             has_rock_stacked = self.move_down()
 
-        if(self.topmost_point > current_top_rock_height):
+        if self.topmost_point > current_top_rock_height:
             current_top_rock_height = self.topmost_point
         return current_top_rock_height, jet_pattern_idx, self.blocked_positions, independent_jet_pattern_idx, unlooped_jet_pattern_idx
 
@@ -105,31 +106,32 @@ class HorizontalLineRock(FallingRock):
 
     def move_to_the_right(self):
         possible_new_rightmost_point = self.rightmost_point + 1 
-        if (possible_new_rightmost_point < CAVE_WIDENESS):
-            rightmost_combinations = [[possible_new_rightmost_point, self.lowmost_point]] # right of horizontal line
+        if possible_new_rightmost_point < CAVE_WIDENESS:
+            rightmost_combinations = [(possible_new_rightmost_point, self.lowmost_point)] # right of horizontal line
             movement_is_possible = self.check_rock_blockedness(rightmost_combinations)
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.rightmost_point = possible_new_rightmost_point
                 self.leftmost_point += 1
 
     def move_to_the_left(self):
         possible_new_leftmost_point = self.leftmost_point - 1 
-        if (possible_new_leftmost_point >= 0):
-            leftmost_combinations = [[possible_new_leftmost_point, self.lowmost_point]] # left of horizontal line
+        if possible_new_leftmost_point >= 0:
+            leftmost_combinations = [(possible_new_leftmost_point, self.lowmost_point)] # left of horizontal line
             movement_is_possible = self.check_rock_blockedness(leftmost_combinations) 
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.leftmost_point = possible_new_leftmost_point
                 self.rightmost_point -= 1
 
     def move_down(self):
         possible_new_lowmost_point = self.lowmost_point - 1
-        lowermost_combinations = [[self.leftmost_point, possible_new_lowmost_point], [self.leftmost_point+1, possible_new_lowmost_point],[self.rightmost_point-1, possible_new_lowmost_point], [self.rightmost_point, possible_new_lowmost_point]]
+        lowermost_combinations = [(self.leftmost_point, possible_new_lowmost_point), (self.leftmost_point+1, possible_new_lowmost_point),(self.rightmost_point-1, possible_new_lowmost_point), (self.rightmost_point, possible_new_lowmost_point)]
         movement_is_possible = self.check_rock_blockedness(lowermost_combinations)        
-        if(movement_is_possible == True):
+        if movement_is_possible == True:
             self.lowmost_point = possible_new_lowmost_point
         else:
-            self.final_positions = [[self.leftmost_point,self.lowmost_point],[self.leftmost_point+1,self.lowmost_point],[self.rightmost_point-1,self.lowmost_point],[self.rightmost_point,self.lowmost_point]]
-            self.blocked_positions = np.vstack([self.blocked_positions, self.final_positions])
+            self.final_positions = [(self.leftmost_point,self.lowmost_point),(self.leftmost_point+1,self.lowmost_point),(self.rightmost_point-1,self.lowmost_point),(self.rightmost_point,self.lowmost_point)]
+            for a_final_position in self.final_positions:
+                self.blocked_positions.add(a_final_position)
 
             self.topmost_point = self.lowmost_point
 
@@ -147,31 +149,32 @@ class CrossRock(FallingRock):
         
     def move_to_the_right(self):
         possible_new_rightmost_point = self.rightmost_point + 1 
-        if (possible_new_rightmost_point < CAVE_WIDENESS):
-            rightmost_combinations = [[possible_new_rightmost_point,self.lowmost_point+1],[self.rightmost_point,self.lowmost_point],[self.rightmost_point,self.lowmost_point+2]] # center-right, bottom, top of cross
+        if possible_new_rightmost_point < CAVE_WIDENESS:
+            rightmost_combinations = [(possible_new_rightmost_point,self.lowmost_point+1),(self.rightmost_point,self.lowmost_point),(self.rightmost_point,self.lowmost_point+2)] # center-right, bottom, top of cross
             movement_is_possible = self.check_rock_blockedness(rightmost_combinations)
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.rightmost_point = possible_new_rightmost_point
                 self.leftmost_point += 1
 
     def move_to_the_left(self):
         possible_new_leftmost_point = self.leftmost_point - 1 
-        if (possible_new_leftmost_point >= 0):
-            leftmost_combinations = [[possible_new_leftmost_point,self.lowmost_point+1],[self.leftmost_point,self.lowmost_point],[self.leftmost_point,self.lowmost_point+2]] # center-right, bottom and top of cross
+        if possible_new_leftmost_point >= 0:
+            leftmost_combinations = [(possible_new_leftmost_point,self.lowmost_point+1),(self.leftmost_point,self.lowmost_point),(self.leftmost_point,self.lowmost_point+2)] # center-right, bottom and top of cross
             movement_is_possible = self.check_rock_blockedness(leftmost_combinations)
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.leftmost_point = possible_new_leftmost_point
                 self.rightmost_point -= 1
 
     def move_down(self):
         possible_new_lowmost_point = self.lowmost_point - 1
-        lowermost_combinations = [[self.rightmost_point-1, possible_new_lowmost_point], [self.rightmost_point, self.lowmost_point], [self.leftmost_point, self.lowmost_point]] # bottom, center-right and center-left of cross
+        lowermost_combinations = [(self.rightmost_point-1, possible_new_lowmost_point), (self.rightmost_point, self.lowmost_point), (self.leftmost_point, self.lowmost_point)] # bottom, center-right and center-left of cross
         movement_is_possible = self.check_rock_blockedness(lowermost_combinations)     
-        if(movement_is_possible == True):
+        if movement_is_possible == True:
             self.lowmost_point = possible_new_lowmost_point
         else:
-            self.final_positions = [[self.leftmost_point+1,self.lowmost_point],[self.leftmost_point,self.lowmost_point+1],[self.rightmost_point-1,self.lowmost_point+1],[self.rightmost_point,self.lowmost_point+1],[self.leftmost_point+1,self.lowmost_point+2]]
-            self.blocked_positions = np.vstack([self.blocked_positions, self.final_positions])
+            self.final_positions = [(self.leftmost_point+1,self.lowmost_point),(self.leftmost_point,self.lowmost_point+1),(self.rightmost_point-1,self.lowmost_point+1),(self.rightmost_point,self.lowmost_point+1),(self.leftmost_point+1,self.lowmost_point+2)]
+            for a_final_position in self.final_positions:
+                self.blocked_positions.add(a_final_position)
 
             self.topmost_point = self.lowmost_point+2
         
@@ -189,17 +192,17 @@ class LeftLRock(FallingRock):
 
     def move_to_the_right(self):
         possible_new_rightmost_point = self.rightmost_point + 1 
-        if (possible_new_rightmost_point < CAVE_WIDENESS):
-            rightmost_combinations = [[possible_new_rightmost_point,self.lowmost_point],[possible_new_rightmost_point,self.lowmost_point+1],[possible_new_rightmost_point,self.lowmost_point+2]] # lower_right, center_right and top_right of left-L
+        if possible_new_rightmost_point < CAVE_WIDENESS:
+            rightmost_combinations = [(possible_new_rightmost_point,self.lowmost_point),(possible_new_rightmost_point,self.lowmost_point+1),(possible_new_rightmost_point,self.lowmost_point+2)] # lower_right, center_right and top_right of left-L
             movement_is_possible = self.check_rock_blockedness(rightmost_combinations)
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.rightmost_point = possible_new_rightmost_point
                 self.leftmost_point += 1
 
     def move_to_the_left(self):
         possible_new_leftmost_point = self.leftmost_point - 1 
-        if (possible_new_leftmost_point >= 0):
-            leftmost_combinations = [[possible_new_leftmost_point,self.lowmost_point]] # lower left of left-L
+        if possible_new_leftmost_point >= 0:
+            leftmost_combinations = [(possible_new_leftmost_point,self.lowmost_point)] # lower left of left-L
             movement_is_possible = self.check_rock_blockedness(leftmost_combinations) 
             if(movement_is_possible == True):
                 self.leftmost_point = possible_new_leftmost_point
@@ -207,13 +210,14 @@ class LeftLRock(FallingRock):
 
     def move_down(self):
         possible_new_lowmost_point = self.lowmost_point - 1
-        lowermost_combinations = [[self.leftmost_point, possible_new_lowmost_point], [self.leftmost_point+1, possible_new_lowmost_point], [self.rightmost_point, possible_new_lowmost_point]] # left, center and lower_right of left-L
+        lowermost_combinations = [(self.leftmost_point, possible_new_lowmost_point), (self.leftmost_point+1, possible_new_lowmost_point), (self.rightmost_point, possible_new_lowmost_point)] # left, center and lower_right of left-L
         movement_is_possible = self.check_rock_blockedness(lowermost_combinations)        
-        if(movement_is_possible == True):
+        if movement_is_possible == True:
             self.lowmost_point = possible_new_lowmost_point
         else:
-            self.final_positions = [[self.leftmost_point,self.lowmost_point],[self.leftmost_point+1,self.lowmost_point],[self.rightmost_point,self.lowmost_point],[self.rightmost_point,self.lowmost_point+1],[self.rightmost_point,self.lowmost_point+2]]
-            self.blocked_positions = np.vstack([self.blocked_positions, self.final_positions])
+            self.final_positions = [(self.leftmost_point,self.lowmost_point),(self.leftmost_point+1,self.lowmost_point),(self.rightmost_point,self.lowmost_point),(self.rightmost_point,self.lowmost_point+1),(self.rightmost_point,self.lowmost_point+2)]
+            for a_final_position in self.final_positions:
+                self.blocked_positions.add(a_final_position)
 
             self.topmost_point = self.lowmost_point + 2
         
@@ -231,31 +235,32 @@ class VerticalLineRock(FallingRock):
 
     def move_to_the_right(self):
         possible_new_rightmost_point = self.rightmost_point + 1 
-        if (possible_new_rightmost_point < CAVE_WIDENESS):
-            rightmost_combinations = [[possible_new_rightmost_point,self.lowmost_point],[possible_new_rightmost_point,self.lowmost_point+1],[possible_new_rightmost_point,self.lowmost_point+2],[possible_new_rightmost_point,self.lowmost_point+3]] # top, centers and bottom of vertical line
+        if possible_new_rightmost_point < CAVE_WIDENESS:
+            rightmost_combinations = [(possible_new_rightmost_point,self.lowmost_point),(possible_new_rightmost_point,self.lowmost_point+1),(possible_new_rightmost_point,self.lowmost_point+2),(possible_new_rightmost_point,self.lowmost_point+3)] # top, centers and bottom of vertical line
             movement_is_possible = self.check_rock_blockedness(rightmost_combinations)
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.rightmost_point = possible_new_rightmost_point
                 self.leftmost_point += 1
 
     def move_to_the_left(self):
         possible_new_leftmost_point = self.leftmost_point - 1 
-        if (possible_new_leftmost_point >= 0):
-            leftmost_combinations = [[possible_new_leftmost_point,self.lowmost_point],[possible_new_leftmost_point,self.lowmost_point+1],[possible_new_leftmost_point,self.lowmost_point+2],[possible_new_leftmost_point,self.lowmost_point+3]] # top, centers and bottom of vertical line
+        if possible_new_leftmost_point >= 0:
+            leftmost_combinations = [(possible_new_leftmost_point,self.lowmost_point),(possible_new_leftmost_point,self.lowmost_point+1),(possible_new_leftmost_point,self.lowmost_point+2),(possible_new_leftmost_point,self.lowmost_point+3)] # top, centers and bottom of vertical line
             movement_is_possible = self.check_rock_blockedness( leftmost_combinations) 
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.leftmost_point = possible_new_leftmost_point
                 self.rightmost_point -= 1
 
     def move_down(self):
         possible_new_lowmost_point = self.lowmost_point - 1
-        lowermost_combinations = [[self.leftmost_point, possible_new_lowmost_point]] # bottom of vertical line
+        lowermost_combinations = [(self.leftmost_point, possible_new_lowmost_point)] # bottom of vertical line
         movement_is_possible = self.check_rock_blockedness(lowermost_combinations)        
-        if(movement_is_possible == True):
+        if movement_is_possible == True:
             self.lowmost_point = possible_new_lowmost_point
         else:
-            self.final_positions = [[self.leftmost_point,self.lowmost_point],[self.leftmost_point,self.lowmost_point+1],[self.leftmost_point,self.lowmost_point+2],[self.leftmost_point,self.lowmost_point+3]]
-            self.blocked_positions = np.vstack([self.blocked_positions, self.final_positions])
+            self.final_positions = [(self.leftmost_point,self.lowmost_point),(self.leftmost_point,self.lowmost_point+1),(self.leftmost_point,self.lowmost_point+2),(self.leftmost_point,self.lowmost_point+3)]
+            for a_final_position in self.final_positions:
+                self.blocked_positions.add(a_final_position)
 
             self.topmost_point = self.lowmost_point + 3
         
@@ -273,31 +278,32 @@ class SquareRock(FallingRock):
 
     def move_to_the_right(self):
         possible_new_rightmost_point = self.rightmost_point + 1 
-        if (possible_new_rightmost_point < CAVE_WIDENESS):
-            rightmost_combinations = [[possible_new_rightmost_point,self.lowmost_point],[possible_new_rightmost_point,self.lowmost_point+1]] # bottom-right and top-right of square
+        if possible_new_rightmost_point < CAVE_WIDENESS:
+            rightmost_combinations = [(possible_new_rightmost_point,self.lowmost_point),(possible_new_rightmost_point,self.lowmost_point+1)] # bottom-right and top-right of square
             movement_is_possible = self.check_rock_blockedness(rightmost_combinations)
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.rightmost_point = possible_new_rightmost_point
                 self.leftmost_point += 1
 
     def move_to_the_left(self):
         possible_new_leftmost_point = self.leftmost_point - 1 
-        if (possible_new_leftmost_point >= 0):
-            leftmost_combinations = [[possible_new_leftmost_point,self.lowmost_point],[possible_new_leftmost_point,self.lowmost_point+1]] # bottom-left and top-left of square
+        if possible_new_leftmost_point >= 0:
+            leftmost_combinations = [(possible_new_leftmost_point,self.lowmost_point),(possible_new_leftmost_point,self.lowmost_point+1)] # bottom-left and top-left of square
             movement_is_possible = self.check_rock_blockedness(leftmost_combinations) 
-            if(movement_is_possible == True):
+            if movement_is_possible == True:
                 self.leftmost_point = possible_new_leftmost_point
                 self.rightmost_point -= 1
 
     def move_down(self):
         possible_new_lowmost_point = self.lowmost_point - 1
-        lowermost_combinations = [[self.leftmost_point, possible_new_lowmost_point],[self.rightmost_point, possible_new_lowmost_point]] # bottom-left and bottom-right of square
+        lowermost_combinations = [(self.leftmost_point, possible_new_lowmost_point),(self.rightmost_point, possible_new_lowmost_point)] # bottom-left and bottom-right of square
         movement_is_possible = self.check_rock_blockedness(lowermost_combinations)        
-        if(movement_is_possible == True):
+        if movement_is_possible == True:
             self.lowmost_point = possible_new_lowmost_point
         else:
-            self.final_positions = [[self.leftmost_point,self.lowmost_point],[self.leftmost_point,self.lowmost_point+1],[self.rightmost_point,self.lowmost_point],[self.rightmost_point,self.lowmost_point+1]]
-            self.blocked_positions = np.vstack([self.blocked_positions, self.final_positions])
+            self.final_positions = [(self.leftmost_point,self.lowmost_point),(self.leftmost_point,self.lowmost_point+1),(self.rightmost_point,self.lowmost_point),(self.rightmost_point,self.lowmost_point+1)]
+            for a_final_position in self.final_positions:
+                self.blocked_positions.add(a_final_position)
 
             self.topmost_point = self.lowmost_point + 1
 
@@ -305,8 +311,8 @@ class SquareRock(FallingRock):
 
 
 
-def first_part(jet_pattern, print_result=False):
-    blocked_positions = np.array([ [floor_width, -1] for floor_width in range(CAVE_WIDENESS) ]) # block the bottom of the cave
+def first_part(jet_pattern, print_result=True):
+    blocked_positions = set( (floor_width, -1) for floor_width in range(CAVE_WIDENESS) ) # block the bottom of the cave
 
     horizontal_line_rock = HorizontalLineRock(jet_pattern)
     cross_rock = CrossRock(jet_pattern)
@@ -319,19 +325,19 @@ def first_part(jet_pattern, print_result=False):
     for rock_idx in range(N_FALLING_ROCKS):
         rock_shape = RockShape(rock_idx % RockShape.N_SHAPES.value)
     
-        if(rock_shape == RockShape.HORIZONTAL_LINE):
+        if rock_shape == RockShape.HORIZONTAL_LINE:
             top_rock_height, jet_pattern_idx, blocked_positions, _, _ = horizontal_line_rock.simulate_falling_rock(top_rock_height, jet_pattern_idx, blocked_positions)
 
-        elif(rock_shape == RockShape.CROSS):
+        elif rock_shape == RockShape.CROSS:
             top_rock_height, jet_pattern_idx, blocked_positions, _, _  = cross_rock.simulate_falling_rock(top_rock_height, jet_pattern_idx, blocked_positions)
 
-        elif(rock_shape == RockShape.LEFT_L):
+        elif rock_shape == RockShape.LEFT_L:
             top_rock_height, jet_pattern_idx, blocked_positions, _, _  = left_L_rock.simulate_falling_rock(top_rock_height, jet_pattern_idx, blocked_positions)
 
-        elif(rock_shape == RockShape.VERTICAL_LINE):
+        elif rock_shape == RockShape.VERTICAL_LINE:
             top_rock_height, jet_pattern_idx, blocked_positions, _, _  = vertical_line_rock.simulate_falling_rock(top_rock_height, jet_pattern_idx, blocked_positions)
 
-        elif(rock_shape == RockShape.SQUARE):
+        elif rock_shape == RockShape.SQUARE:
             top_rock_height, jet_pattern_idx, blocked_positions, _, _  = square_rock.simulate_falling_rock(top_rock_height, jet_pattern_idx, blocked_positions)
     
     if print_result:
@@ -341,7 +347,7 @@ def first_part(jet_pattern, print_result=False):
 
 
 def second_part(jet_pattern):
-    blocked_positions = np.array([ [floor_width, -1] for floor_width in range(CAVE_WIDENESS) ]) # block the bottom of the cave
+    blocked_positions = set( (floor_width, -1) for floor_width in range(CAVE_WIDENESS) ) # block the bottom of the cave
 
     horizontal_line_rock = HorizontalLineRock(jet_pattern)
     cross_rock = CrossRock(jet_pattern)
@@ -350,11 +356,11 @@ def second_part(jet_pattern):
     square_rock = SquareRock(jet_pattern)
 
     for pass_idx in range(2): # the first pass to find the pattern, the second to check the extra missing heights (the ones at the beginning, before the pattern began)
-        if(pass_idx == 0):
+        if pass_idx == 0:
             maximum_number_falling_rocks = N_FALLING_ROCKS_PART2
         else:
             maximum_number_falling_rocks = n_second_pass_rocks
-            blocked_positions = np.array([ [floor_width, -1] for floor_width in range(CAVE_WIDENESS) ]) # block the bottom of the cave
+            blocked_positions = set( (floor_width, -1) for floor_width in range(CAVE_WIDENESS) ) # block the bottom of the cave
         rock_reference_taken = False
 
         # jet_pattern_idx loops at the size of jet_pattern, to keep indexing it. independent_jet_pattern_idx loops only when all rock types have been processed. unlooped_jet_pattern_idx does not loop at all
@@ -383,9 +389,9 @@ def second_part(jet_pattern):
                 top_rock_height, jet_pattern_idx, blocked_positions, unlooped_jet_pattern_idx, independent_jet_pattern_idx = square_rock.simulate_falling_rock(top_rock_height, jet_pattern_idx, blocked_positions, unlooped_jet_pattern_idx, independent_jet_pattern_idx)
 
 
-                if rock_reference_taken == False and unlooped_jet_pattern_idx > len(jet_pattern) and rock_idx > 200 :
+                if rock_reference_taken == False and unlooped_jet_pattern_idx > len(jet_pattern) and rock_idx > ARBITRARY_HIGH_NUMBER_TO_BEGIN_TO_LOOK_FOR_A_PATTERN :
                     # take a reference at the moment of time in which, hopefully, the falling rocks began to loop
-                    reference_rock_list = np.array([np.array(horizontal_line_rock.final_positions), np.array(cross_rock.final_positions), np.array(left_L_rock.final_positions), np.array(vertical_line_rock.final_positions), np.array(square_rock.final_positions)], dtype=object)
+                    reference_rock_list = list([np.array(horizontal_line_rock.final_positions), np.array(cross_rock.final_positions), np.array(left_L_rock.final_positions), np.array(vertical_line_rock.final_positions), np.array(square_rock.final_positions)])
                     for idx in range(len(reference_rock_list)):
                         reference_rock_list[idx][:,1] -= top_rock_height
                     reference_independent_jet_pattern_idx = independent_jet_pattern_idx
@@ -395,17 +401,17 @@ def second_part(jet_pattern):
 
                 elif reference_independent_jet_pattern_idx == independent_jet_pattern_idx:
                     # compare to the previous reference of rock positions to check if the falling rocks have looped. To avoid comparing it every time, it is done only when the jet pattern is in the same position as it was when the reference was taken
-                    rock_to_compare_list = np.array([np.array(horizontal_line_rock.final_positions), np.array(cross_rock.final_positions), np.array(left_L_rock.final_positions), np.array(vertical_line_rock.final_positions), np.array(square_rock.final_positions)], dtype=object)
+                    rock_to_compare_list = list([np.array(horizontal_line_rock.final_positions), np.array(cross_rock.final_positions), np.array(left_L_rock.final_positions), np.array(vertical_line_rock.final_positions), np.array(square_rock.final_positions)])
                     for idx in range(len(reference_rock_list)):
                         rock_to_compare_list[idx][:,1] -= top_rock_height
                         
                     all_rocks_are_repeated = True
                     for reference_rock, rock_to_compare in zip(reference_rock_list, rock_to_compare_list):
-                        if( not ( np.all(reference_rock[:,1] == rock_to_compare[:,1]) and np.all(reference_rock[:,0] == rock_to_compare[:,0]) ) ):
+                        if not np.all(reference_rock == rock_to_compare):
                             all_rocks_are_repeated = False
                             break
 
-                    if(all_rocks_are_repeated == True):
+                    if all_rocks_are_repeated == True:
                         repeated_rock_patterns_height = top_rock_height - reference_top_rock_height
                         n_rocks_between_repeated_rock_patterns = rock_idx - reference_rock_idx
 

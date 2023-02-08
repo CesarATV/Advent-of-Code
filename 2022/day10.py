@@ -4,13 +4,13 @@ import numpy as np
 PUZZLE_INPUT_FILE_NAME = "puzzleInputs/day10.txt"
 PUZZLE_EXAMPLE_INPUT_FILE_NAME = "puzzleInputs/day10_example.txt"
 
-CYCLES_OF_INTEREST = [20,60,100,140,180,220]
+CYCLES_OF_INTEREST = (20,60,100,140,180,220)
 
 HEIGHT_CRT_SCREEN = 6
 WIDTH_CRT_SCREEN = 40
-CYCLES_OF_INTEREST_PART2 = [40,80,120,160,200,240]
+CYCLES_OF_INTEREST_PART2 = (40,80,120,160,200,240)
 
-# these first two characters are the default suggested by the input of the day. However, the rendered output is easier to read if using others, so they are commented out
+# these first two characters are the default suggested by the input of the day. They are commente out as the rendered output is easier to read if using others
 # MATCH_PRINTING_CHAR = "#" # default
 # EMPTY_PRINTING_CHAR = "." # default
 MATCH_PRINTING_CHAR = "█"
