@@ -45,17 +45,17 @@ def parse_puzzle_file(lines):
     monkey_list = []
     are_there_more_monkeys = len(lines[0:]) > MONKEY_TEXT_LENGTH
     line_index = 0
-    while(are_there_more_monkeys == True):
+    while are_there_more_monkeys == True:
         split_item_line = lines[line_index + 1].replace(",","").split(" ")
         new_items = [[] for _ in range(len(split_item_line[4:]))]
         for item_idx in range(len(split_item_line[4:])):
             new_items[item_idx] = int(split_item_line[4 +item_idx ])
 
-        if(lines[line_index + 2].split(" ")[-1] == "old"):
+        if lines[line_index + 2].split(" ")[-1] == "old":
             new_operation_type = OperationType.EXPONENTIATION_OPERATION
             new_operation_value = 0
         else:
-            if(lines[line_index + 2].find("*") != -1):
+            if lines[line_index + 2].find("*") != -1:
                 new_operation_type = OperationType.MULTIPLICATION_OPERATION
             else:
                 new_operation_type = OperationType.SUM_OPERATION
@@ -75,7 +75,7 @@ def parse_puzzle_file(lines):
     return monkey_list
 
 
-def first_part(monkey_list):
+def solve_first_part(monkey_list):
     n_monkeys = len(monkey_list)
     for _ in range(N_ROUNDS):
         for current_monkey_id in range(n_monkeys):
@@ -84,16 +84,16 @@ def first_part(monkey_list):
             for _ in range(n_items):
                 item_worry = monkey_list[current_monkey_id].items.pop(0)
                 
-                if(monkey_list[current_monkey_id].operation_type == OperationType.EXPONENTIATION_OPERATION):
+                if monkey_list[current_monkey_id].operation_type == OperationType.EXPONENTIATION_OPERATION:
                     item_worry *= item_worry
-                elif(monkey_list[current_monkey_id].operation_type == OperationType.MULTIPLICATION_OPERATION):
+                elif monkey_list[current_monkey_id].operation_type == OperationType.MULTIPLICATION_OPERATION:
                     item_worry *=  monkey_list[current_monkey_id].operation_value
                 else:
                     item_worry +=  monkey_list[current_monkey_id].operation_value
                     
                 item_worry //= 3
 
-                if( (item_worry % monkey_list[current_monkey_id].test_dividend) == 0):
+                if (item_worry % monkey_list[current_monkey_id].test_dividend) == 0:
                     target_monkey = monkey_list[current_monkey_id].true_target
                 else:
                     target_monkey = monkey_list[current_monkey_id].false_target
@@ -110,7 +110,7 @@ def first_part(monkey_list):
     print("The monkey business level is", np.sort(n_inspections_list)[-1] * np.sort(n_inspections_list)[-2])
  
 
-def second_part(monkey_list):
+def solve_second_part(monkey_list):
     '''
     As the item_worry values are no longer divided by 3 in each iteration, and the number of rounds has increased to 10000, reusing the old code to solve the second part of this challenge is, although possible, absurdly inefficient. There are exponentations of always-increasing numbers, these create a risk of overflowing and do slow down the program too much (maybe days).
 
@@ -135,14 +135,14 @@ def second_part(monkey_list):
             for _ in range(n_items):
                 item_worry = monkey_list[current_monkey_id].items.pop(0)
                 
-                if(monkey_list[current_monkey_id].operation_type == OperationType.EXPONENTIATION_OPERATION):
+                if monkey_list[current_monkey_id].operation_type == OperationType.EXPONENTIATION_OPERATION:
                     item_worry *= item_worry
-                elif(monkey_list[current_monkey_id].operation_type == OperationType.MULTIPLICATION_OPERATION):
+                elif monkey_list[current_monkey_id].operation_type == OperationType.MULTIPLICATION_OPERATION:
                     item_worry *= monkey_list[current_monkey_id].operation_value
                 else:
                     item_worry += monkey_list[current_monkey_id].operation_value
 
-                if( (item_worry % monkey_list[current_monkey_id].test_dividend) == 0):
+                if (item_worry % monkey_list[current_monkey_id].test_dividend) == 0:
                     target_monkey = monkey_list[current_monkey_id].true_target
                 else:
                     target_monkey = monkey_list[current_monkey_id].false_target
@@ -166,8 +166,8 @@ def main(file_name):
         lines.pop()
 
     monkey_list = parse_puzzle_file(lines)
-    first_part(copy.deepcopy(monkey_list))
-    second_part(monkey_list)
+    solve_first_part(copy.deepcopy(monkey_list))
+    solve_second_part(monkey_list)
 
 
 if __name__ == "__main__":

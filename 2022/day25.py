@@ -26,7 +26,7 @@ def SNAFU_to_decimal(SNAFU_number):
 
         if snafu_digit_char == MINUS_SIGN:
             snafu_digit = -1
-        elif(snafu_digit_char == DOUBLE_MINUS_SIGN):
+        elif snafu_digit_char == DOUBLE_MINUS_SIGN:
             snafu_digit = -2
         else:
             snafu_digit = int(snafu_digit_char)
@@ -39,7 +39,7 @@ def SNAFU_to_decimal(SNAFU_number):
 def decimal_to_SNAFU(decimal_number):
     radixed_number = ""
     floored_fraction = decimal_number
-    while(floored_fraction != 0):
+    while floored_fraction != 0:
         floored_fraction, remainder = divmod(floored_fraction,SNAFU_RADIX)
         radixed_number += str(remainder)
     
@@ -49,27 +49,27 @@ def decimal_to_SNAFU(decimal_number):
     carried_value = 0
     for idx in reversed(range(len(radixed_number))):
         radixed_digit = int(radixed_number[idx])
-        if (carried_value == 1):
+        if carried_value == 1:
             radixed_digit +=1 
             carried_value = 0
         
-        if(radixed_digit == 4):
+        if radixed_digit == 4:
             SNAFU_number_list[idx] = "-"
             carried_value = 1
-        elif(radixed_digit == 3):
+        elif radixed_digit == 3:
             SNAFU_number_list[idx] = "="
             carried_value = 1
         else:
             SNAFU_number_list[idx] = str(radixed_digit)
 
-    if(carried_value==1):
+    if carried_value==1:
         SNAFU_number = "1" + SNAFU_number
 
     SNAFU_number = "".join(SNAFU_number_list)
     return SNAFU_number
 
 
-def first_part(lines):
+def solve_first_part(lines):
     number_sum_decimal = 0
     for line in lines:
         number_sum_decimal += SNAFU_to_decimal(line)
@@ -85,7 +85,7 @@ def main(file_name):
     while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
-    first_part(lines)
+    solve_first_part(lines)
     # there is no second part to be coded for this puzzle
 
 

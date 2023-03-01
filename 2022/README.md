@@ -13,6 +13,6 @@ Additionally, day15.py accepts an additional argument, *-e*, to specify that the
 
 *data_visualizations.ipynb* shows some simple plots made from data from Day 17 and Day 18.
 
-Besides the second part of Day 16, Day 18 and Day 23, all programs should give a solution (compute) in less than a minute on non-example files. The second part of day 16 very likely produces the solution in less than a minute, but the program takes longer to finish as it also checks very unlikely possibilities. The second part of Day 18 takes around two and a half minutes to compute.
+Besides the second part of Day 16, Day 18 and Day 23, all programs should give a solution (compute) in less than a minute on non-example files. The second part of day 16 very likely produces the solution in less than a minute, but the program takes longer to finish as it also checks very unlikely possibilities. The second part of Day 18 takes around two and a half minutes to compute. The execution time of these programs can be improved.
 
-It was considered to use deques, but no situation were they could outperform lists was noticed. In a few cases lists were used in places where sets or tuples could have been more efficient.
+Some programs could receive some additional comments or better variable names.

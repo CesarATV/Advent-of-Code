@@ -151,7 +151,7 @@ class RobotBuildingPath:
 
 
 
-def first_part(blueprint_list, n_minutes_to_consider=N_MINUTES, print_result=True):
+def solve_first_part(blueprint_list, n_minutes_to_consider=N_MINUTES, print_result=True):
     
     most_geodes_by_blueprint = [None for _ in range(len(blueprint_list))]
     total_quality_level = 0
@@ -218,8 +218,8 @@ def first_part(blueprint_list, n_minutes_to_consider=N_MINUTES, print_result=Tru
     return most_geodes_by_blueprint
 
 
-def second_part(blueprint_list):
-    most_geodes_by_blueprint = first_part(blueprint_list[:N_BLUEPRINTS_TO_CONSIDER_PART2], n_minutes_to_consider=N_MINUTES_PART2, print_result=False)
+def solve_second_part(blueprint_list):
+    most_geodes_by_blueprint = solve_first_part(blueprint_list[:N_BLUEPRINTS_TO_CONSIDER_PART2], n_minutes_to_consider=N_MINUTES_PART2, print_result=False)
 
     geode_multiplication = np.prod(most_geodes_by_blueprint)
 
@@ -235,8 +235,8 @@ def main(file_name):
 
     blueprint_list = parse_puzzle_file(lines)
 
-    first_part(blueprint_list)
-    second_part(blueprint_list)
+    solve_first_part(blueprint_list)
+    solve_second_part(blueprint_list)
 
 
 if __name__ == "__main__":

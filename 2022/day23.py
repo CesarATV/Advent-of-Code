@@ -1,5 +1,5 @@
 '''
-The code used for the second part of the puzzle is really slow when using non-example data, taking about half an hour to complete. This is despite using numpy notation trying to avoid loops as much as possible.
+The code used for the second part of the puzzle is really slow when using non-example data, taking about half an hour to complete. This is despite using numpy notation trying to avoid loops as much as possible. It is likely that numpy is not the ideal tool to solve the puzzle. TODO: Improve this program
 
 Maybe further improvements could include excluding too far away elves when checking if their positions are occupied, as there is a tendency that only one group in the map moves.
 It has not been found yet a solution that can predict the final positions of the elves without computing every single movement of them. There was no completely cyclical behaviour found.
@@ -54,7 +54,7 @@ def round_first_half(elf_positions, n_elves):
     occupied_cells_mask = np.zeros(n_elves,dtype=bool)
     for extra_row in range(-1,2):
         for extra_col in range(-1,2):
-            if(extra_col == 0 and extra_row == 0):
+            if extra_col == 0 and extra_row == 0:
                 continue
 
             cell_occupied_uppermask = (positions_elves_able_to_move + [extra_row,extra_col])[:,None] == elf_positions # create a mask used to check if every row of positions_elves_able_to_move is the same as a position in elf_positions
@@ -103,7 +103,7 @@ def round_second_half(elf_positions, positions_elves_able_to_move, orientation_i
         unoccuppied_planned_movements_mask = np.logical_not(not_allowed_planned_movements_mask)
 
         n_elves_still_to_move = np.sum(uncompleted_movements_mask)
-        if(n_elves_still_to_move == 0):
+        if n_elves_still_to_move == 0:
             break
 
         next_considered_movement_array = next_movement_array[uncompleted_movements_mask == True]
@@ -116,7 +116,7 @@ def round_second_half(elf_positions, positions_elves_able_to_move, orientation_i
     
 
 
-def first_part(elf_positions):
+def solve_first_part(elf_positions):
     movement_direction_array = np.array([[[-1,-1],[-1,1],[-1,0]],[[1,-1],[1,1],[1,0]],[[-1,-1],[1,-1],[0,-1]],[[-1,1],[1,1],[0,1]]]) # ordered as north, south, west and east
 
     n_elves = elf_positions.shape[0]
@@ -125,7 +125,7 @@ def first_part(elf_positions):
     for round_n in range(N_ROUNDS):
 
         positions_elves_able_to_move, occupied_cells_mask = round_first_half(elf_positions, n_elves)
-        if(positions_elves_able_to_move.size == 0):
+        if positions_elves_able_to_move.size == 0:
             print("Elves cannot move anymore. The movement process stopped in round", round_n)
             break
         
@@ -146,9 +146,9 @@ def first_part(elf_positions):
         
 
 
-def second_part(elf_positions):
+def solve_second_part(elf_positions):
     '''
-    second_part is almost identical to first_part. The only difference is that it loops until all elves cannot move instead of a fixed number of rounds
+    solve_second_part is almost identical to solve_first_part. The only difference is that it loops until all elves cannot move instead of a fixed number of rounds
     '''
     
     movement_direction_array = np.array([[[-1,-1],[-1,1],[-1,0]],[[1,-1],[1,1],[1,0]],[[-1,-1],[1,-1],[0,-1]],[[-1,1],[1,1],[0,1]]]) # ordered as north, south, west and east
@@ -160,7 +160,7 @@ def second_part(elf_positions):
         round_n += 1  # the number of rounds begins at 1
 
         positions_elves_able_to_move, occupied_cells_mask = round_first_half(elf_positions, n_elves)
-        if(positions_elves_able_to_move.size == 0):
+        if positions_elves_able_to_move.size == 0:
             print("Elves cannot move anymore. The movement process stopped in round", round_n)
             break
         
@@ -187,8 +187,8 @@ def main(file_name):
 
     elf_positions = parse_puzzle_file(lines)
     
-    first_part(elf_positions)
-    second_part(elf_positions)
+    solve_first_part(elf_positions)
+    solve_second_part(elf_positions)
     
 
 if __name__ == "__main__":

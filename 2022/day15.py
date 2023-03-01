@@ -54,7 +54,7 @@ def manhattan_distance(x_pos1,y_pos1,x_pos2,y_pos2):
     return x_distance + y_distance
 
 
-def first_part(lines, row_of_interest=ROW_OF_INTEREST):
+def solve_first_part(lines, row_of_interest=ROW_OF_INTEREST):
     x_without_beacon = set()
     x_with_beacon = set()
 
@@ -65,12 +65,12 @@ def first_part(lines, row_of_interest=ROW_OF_INTEREST):
 
         beacon_x = int(split_line[8][2:-1])
         beacon_y = int(split_line[9][2:])
-        if(beacon_y == row_of_interest):
+        if beacon_y == row_of_interest:
             x_with_beacon.add(beacon_x)
 
         sensor_range = manhattan_distance(sensor_x, sensor_y, beacon_x, beacon_y)
 
-        if((sensor_y + sensor_range) >= row_of_interest):
+        if (sensor_y + sensor_range) >= row_of_interest:
             distance_to_interest = abs(sensor_y - row_of_interest)
             lateral_x_extension = sensor_range-distance_to_interest
             for blocked_x in range(sensor_x - lateral_x_extension, sensor_x + lateral_x_extension +1):
@@ -84,7 +84,7 @@ def check_if_it_can_be_a_beacon(point_x, point_y, subsensor_list):
     can_it_be_a_beacon = True
     for sensor in subsensor_list:
         sensor_to_point_distance = manhattan_distance(point_x,point_y,sensor.x,sensor.y)
-        if( sensor_to_point_distance <= sensor.range):
+        if sensor_to_point_distance <= sensor.range:
             can_it_be_a_beacon = False
             break
     return can_it_be_a_beacon
@@ -95,26 +95,26 @@ def check_sensing_borders(sensor_x, sensor_y, sensor_range,sensor_idx, sensor_li
     
     for y_idx in range(-sensor_range,sensor_range+1):
         border_y = sensor_y + y_idx
-        if(border_y >= MINIMUM_COORDINATE_POSITION and border_y <= maximum_coordinate_position):
+        if border_y >= MINIMUM_COORDINATE_POSITION and border_y <= maximum_coordinate_position:
             pre_x_idx = sensor_range - y_idx*np.sign(y_idx) + 1
 
-            if(pre_x_idx != 0):
+            if pre_x_idx != 0:
                 x_idxs = [pre_x_idx, -pre_x_idx]
             else:
                 x_idxs = [pre_x_idx]
 
             for x_idx in x_idxs:
                 border_x = sensor_x + x_idx
-                if(border_x >= MINIMUM_COORDINATE_POSITION and border_x <= maximum_coordinate_position):
+                if border_x >= MINIMUM_COORDINATE_POSITION and border_x <= maximum_coordinate_position:
                     can_it_be_a_beacon = check_if_it_can_be_a_beacon(border_x, border_y, subsensor_list)
-                    if(can_it_be_a_beacon == True):
+                    if can_it_be_a_beacon == True:
                         return can_it_be_a_beacon, border_x, border_y
 
     can_it_be_a_beacon = False
     return can_it_be_a_beacon, -1, -1
 
     
-def second_part(lines, maximum_coordinate_position=MAXIMUM_COORDINATE_POSITION):
+def solve_second_part(lines, maximum_coordinate_position=MAXIMUM_COORDINATE_POSITION):
     sensor_list = []
     for idx, line in enumerate(lines):
         split_line = line.split(" ")
@@ -132,10 +132,10 @@ def second_part(lines, maximum_coordinate_position=MAXIMUM_COORDINATE_POSITION):
 
     for sensor in sensor_list:
         beacon_found, target_beacon_x, target_beacon_y = check_sensing_borders(sensor.x, sensor.y, sensor.range, sensor.idx, sensor_list, maximum_coordinate_position)
-        if(beacon_found == True):
+        if beacon_found == True:
             break
 
-    if(beacon_found == True):
+    if beacon_found == True:
         tuning_frequency = target_beacon_x * X_TUNING_FREQUENCY + target_beacon_y
         print("Beacon found at [{},{}] with a tuning frequency of {}".format(target_beacon_x,target_beacon_y,tuning_frequency))
 
@@ -156,8 +156,8 @@ def main(file_name, using_example_file=False):
         row_of_interest = ROW_OF_INTEREST_EXAMPLE_FILE
         maximum_coordinate_position = MAXIMUM_COORDINATE_POSITION_EXAMPLE_FILE
 
-    first_part(lines, row_of_interest)
-    second_part(lines, maximum_coordinate_position)
+    solve_first_part(lines, row_of_interest)
+    solve_second_part(lines, maximum_coordinate_position)
 
 
 if __name__ == "__main__":

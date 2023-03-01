@@ -49,7 +49,7 @@ def search_marker(file_contents, n_unique_characters):
         return None
 
 
-def first_part(file_contents):
+def solve_first_part(file_contents):
     n_unique_characters = N_UNIQUE_CHARACTERS_FOR_PACKAGE
     marker_position = search_marker(file_contents, n_unique_characters)
     if marker_position != None:
@@ -58,7 +58,7 @@ def first_part(file_contents):
         print("No pattern detected when looking for start-of-packet marker. This option should never happen")
 
 
-def second_part(file_contents):
+def solve_second_part(file_contents):
     n_unique_characters = N_UNIQUE_CHARACTERS_FOR_MESSAGE
     marker_position = search_marker(file_contents, n_unique_characters)
     if marker_position != None:
@@ -71,8 +71,8 @@ def main(file_name):
     with open(file_name) as file:
         file_contents = file.read()
 
-    first_part(file_contents)
-    second_part(file_contents)
+    solve_first_part(file_contents)
+    solve_second_part(file_contents)
 
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ def check_surface_of_boulder_block(boulder, x_base, y_base, z_base):
     return exposed_surface
 
 
-def first_part(boulder):
+def solve_first_part(boulder):
     surface_area = 0
     for x, y, z in np.ndindex(boulder.shape):
         if boulder[x,y,z] == True: # if there is a block in the boulder, it may have exposed surface
@@ -123,7 +123,7 @@ def is_block_in_an_air_pocket(boulder,x,y,z):
 
 
 
-def second_part(boulder):
+def solve_second_part(boulder):
     surface_area = 0
     for x, y, z in np.ndindex(boulder.shape):
         if boulder[x,y,z] == True:
@@ -144,8 +144,8 @@ def main(file_name):
         lines.pop()
 
     boulder = parse_puzzle_file(lines)
-    first_part(boulder)
-    second_part(boulder)
+    solve_first_part(boulder)
+    solve_second_part(boulder)
 
 
 if __name__ == "__main__":

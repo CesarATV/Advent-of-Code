@@ -35,7 +35,7 @@ def parse_puzzle_file(lines):
         for path_end_string in path_nodes[1:]:
             path_end = [int(x) for x in path_end_string.split(",")]
 
-            if(path_begin[0] == path_end[0]):
+            if path_begin[0] == path_end[0]:
                 sorted_begin, sorted_end  = sorted([path_begin[1],path_end[1]])
                 for idx in range(sorted_begin,sorted_end+1):
                     blocked_nodes.add((path_begin[0],idx))
@@ -49,7 +49,7 @@ def parse_puzzle_file(lines):
     return blocked_nodes
 
 
-def first_part(blocked_nodes):
+def solve_first_part(blocked_nodes):
     lower_border = max([node[1] for node in blocked_nodes]) # after this border (y coordinate), the sand falls into the abyss
 
     falling_sand_positions = [SAND_SOURCE_POSITION] # positions in x and y coordinates. This vector tracks all the positions visited by falling sand. As every falling sand follows the same path until their last movement, this vector allows to compute the same movements every time
@@ -68,7 +68,7 @@ def first_part(blocked_nodes):
                     # right diagonal
                     if (sand_position[0]+1, sand_position[1]+1) in blocked_nodes:
 
-                        blocked_nodes.add(tuple(sand_position))
+                        blocked_nodes.add(sand_position)
                         falling_sand_positions.pop()
                         sand_has_stacked = True
                                 
@@ -90,9 +90,9 @@ def first_part(blocked_nodes):
     print("The amount of stacked sand before some fells into the abyss is", stacked_sand)
 
 
-def second_part(blocked_nodes):
+def solve_second_part(blocked_nodes):
     '''
-    This function is very similar to first_part bar some small differences. These are mostly result of checking if sand tries to bypass the border
+    This function is very similar to solve_first_part bar some small differences. These are mostly result of checking if sand tries to bypass the border
     '''
 
     lower_border = max([node[1] for node in blocked_nodes]) + EXTRA_BORDER_LIMIT # is a separate variable from blocked_nodes because the x size is infinite. This variable represents then only the y coordinate
@@ -106,7 +106,7 @@ def second_part(blocked_nodes):
 
             sand_position = falling_sand_positions[-1]
             if sand_position[1]+1 == lower_border:
-                blocked_nodes.add(tuple(sand_position))
+                blocked_nodes.add(sand_position)
                 falling_sand_positions.pop()
                 sand_has_stacked = True
 
@@ -122,7 +122,7 @@ def second_part(blocked_nodes):
                     # right diagonal
                     if (sand_position[0]+1, sand_position[1]+1) in blocked_nodes:
 
-                        blocked_nodes.add(tuple(sand_position))
+                        blocked_nodes.add(sand_position)
                         falling_sand_positions.pop()
                         sand_has_stacked = True
 
@@ -150,8 +150,8 @@ def main(file_name):
         lines.pop()
 
     blocked_nodes = parse_puzzle_file(lines)
-    first_part(blocked_nodes.copy())
-    second_part(blocked_nodes)
+    solve_first_part(blocked_nodes.copy())
+    solve_second_part(blocked_nodes)
 
 if __name__ == "__main__":
     main(parse_file_name())

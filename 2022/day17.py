@@ -1,7 +1,7 @@
 '''
 The instructions did not specify exactly how the height of the tower of rocks (the puzzle answer) is defined. It has been found that this is simply the height of the highest stacked rock (so it does not matter if there are empty spots within that tower)
 
-The first_part simulates the movement of each rock, declarng that movement possible if it does not interfere with any rock (the variable blocked_positions keeps track of this). In retrospective, blocked_positions should have been a set instead of a numpy array
+The first part simulates the movement of each rock, declaring that movement possible if it does not interfere with any rock (the variable blocked_positions keeps track of this). In retrospective, blocked_positions should have been a set instead of a numpy array
 
 
 For the second part, the new number of falling rocks would require an absurd long amount of time to estimate the heigh of the resulting tower by simulating every rock movement. It would also require a high amount of memory containing all the fallen blocks. Part of this memory could be freed when all the width cells of the cave at a particular height are blocked, allowing to make that new height the new floor of the cave. However, adding a check to verify when these cells are blocked would also slow the program more
@@ -311,7 +311,7 @@ class SquareRock(FallingRock):
 
 
 
-def first_part(jet_pattern, print_result=True):
+def solve_first_part(jet_pattern, print_result=True):
     blocked_positions = set( (floor_width, -1) for floor_width in range(CAVE_WIDENESS) ) # block the bottom of the cave
 
     horizontal_line_rock = HorizontalLineRock(jet_pattern)
@@ -346,7 +346,7 @@ def first_part(jet_pattern, print_result=True):
     return blocked_positions # variable returned only for data visualization
 
 
-def second_part(jet_pattern):
+def solve_second_part(jet_pattern):
     blocked_positions = set( (floor_width, -1) for floor_width in range(CAVE_WIDENESS) ) # block the bottom of the cave
 
     horizontal_line_rock = HorizontalLineRock(jet_pattern)
@@ -430,8 +430,8 @@ def main(file_name):
     with open(file_name) as file:
         jet_pattern = file.read().splitlines()[0]
 
-    first_part(jet_pattern)
-    second_part(jet_pattern)
+    solve_first_part(jet_pattern)
+    solve_second_part(jet_pattern)
 
 
 if __name__ == "__main__":

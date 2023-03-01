@@ -3,24 +3,24 @@ const PUZZLE_EXAMPLE_INPUT_FILE_NAME: &str = "puzzleInputs/day1_example.txt";
 
 const SLIDING_WINDOW_SIZE: usize = 3;
 
-fn first_part(mut lines: core::str::Lines)
+fn solve_first_part(mut lines: core::str::Lines)
 {
     let mut n_depth_increases: i32 = 0;
     let mut past_number: u32 = lines.next().expect("Empty input file").parse::<u32>().expect("The lines contain a non-number character");
 
-    for line in lines {   
+    lines.for_each(|line: &str| {   
         let current_number: u32 = line.parse::<u32>().expect("Not a number");
         if past_number < current_number {
             n_depth_increases += 1;
         }
         
         past_number = current_number;
-    }
+    });
     println!("The deep increases {n_depth_increases} times");
 }
 
 
-fn second_part(lines: core::str::Lines)
+fn solve_second_part(lines: core::str::Lines)
 {
     let lines_vector: Vec<u32> = lines.map(|x: &str| x.parse::<u32>().expect("The lines contain a non-number character")).collect();
 
@@ -43,8 +43,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let file_contents: &str = file_contents.trim_end(); // remove last empty lines, if any. They do not add information and can cause confusion
     
-    first_part(file_contents.lines());
-    second_part(file_contents.lines());
+    solve_first_part(file_contents.lines());
+    solve_second_part(file_contents.lines());
 
     Ok(())
 }

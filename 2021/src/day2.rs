@@ -2,7 +2,7 @@ const PUZZLE_INPUT_FILE_NAME: &str = "puzzleInputs/day2.txt";
 const PUZZLE_EXAMPLE_INPUT_FILE_NAME: &str = "puzzleInputs/day2_example.txt";
 
 
-fn first_part(lines: core::str::Lines) {
+fn solve_first_part(lines: core::str::Lines) {
     let mut horizontal_position: i32 = 0;
     let mut depth: i32 = 0;
     lines.for_each(|line: &str| {
@@ -19,7 +19,7 @@ fn first_part(lines: core::str::Lines) {
 }
 
 
-fn second_part(lines: core::str::Lines) {
+fn solve_second_part(lines: core::str::Lines) {
     let mut horizontal_position: i32 = 0;
     let mut depth: i32 = 0;
     let mut aim: i32 = 0;
@@ -32,7 +32,7 @@ fn second_part(lines: core::str::Lines) {
             },
             "down" => aim += split_line[1].parse::<i32>().expect("Not a number"),
             "up" => aim -= split_line[1].parse::<i32>().expect("Not a number"),
-            &_ => panic!("File instruction not correct")
+            &_ => unreachable!("File instruction not correct")
         }
     });
     
@@ -48,8 +48,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let file_contents: &str = file_contents.trim_end();
     
-    first_part(file_contents.lines());
-    second_part(file_contents.lines());
+    solve_first_part(file_contents.lines());
+    solve_second_part(file_contents.lines());
 
     Ok(())
 }

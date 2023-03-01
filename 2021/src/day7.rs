@@ -11,7 +11,7 @@ const PUZZLE_INPUT_FILE_NAME: &str = "puzzleInputs/day7.txt";
 const PUZZLE_EXAMPLE_INPUT_FILE_NAME: &str = "puzzleInputs/day7_example.txt";
 
 
-fn first_part(file_contents: &str) {
+fn solve_first_part(file_contents: &str) {
     let mut positions_vector: Vec<i32> = file_contents.split(",").map(|x: &str| x.parse::<i32>().expect("Not a number in file lines")).collect();
     positions_vector.sort();
 
@@ -29,7 +29,7 @@ fn first_part(file_contents: &str) {
 }
 
 
-fn second_part(file_contents: &str) {
+fn solve_second_part(file_contents: &str) {
     // as explained at the top of the file, this function uses the mean value to find the possible ideal positions (either the ceil or floor of that value) that give the minimum amount of fuel
 
     let positions_vector: Vec<i32> = file_contents.split(",").map(|x: &str| x.parse::<i32>().expect("Not a number in file lines")).collect();
@@ -59,8 +59,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let file_contents: &str = file_contents.trim_end(); // remove last empty lines, if any. They do not add information and can cause confusion
     
-    first_part(file_contents);
-    second_part(file_contents);
+    solve_first_part(file_contents);
+    solve_second_part(file_contents);
 
     Ok(())
 }

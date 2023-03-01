@@ -18,7 +18,7 @@ def parse_file_name():
         return args.file_name[1]
 
 
-def first_part(lines):
+def solve_first_part(lines):
     most_calories = 0
     current_calories = 0
     for line in lines:
@@ -33,7 +33,7 @@ def first_part(lines):
     print("The Elf that carries the most calories carries", most_calories)
 
 
-def second_part(lines):
+def solve_second_part(lines):
     most_calories_array = [0 for _ in range(NUMBER_OF_ELVES)]
     current_calories = 0
     for line in lines:
@@ -58,8 +58,8 @@ def main(file_name):
         lines = file.read().splitlines()
         lines += [""] # Be sure that there is an extra empty line at the end. This is just to make sure to check the maximum values in the upcoming loops of the functions
 
-    first_part(lines)
-    second_part(lines)
+    solve_first_part(lines)
+    solve_second_part(lines)
 
 
 if __name__ == "__main__":

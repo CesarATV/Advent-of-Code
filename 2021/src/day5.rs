@@ -17,7 +17,7 @@ fn parse_puzzle_line(line: &str) -> (i32, i32, i32, i32) {
 }
 
 
-fn first_part(lines: core::str::Lines) {
+fn solve_first_part(lines: core::str::Lines) {
     let mut position_passes: std::collections::HashMap<(i32, i32), u32> = std::collections::HashMap::new(); // the tuple stores (x,y) coordinates in that order
 
     lines.for_each(|line: &str| {
@@ -61,7 +61,7 @@ fn first_part(lines: core::str::Lines) {
 }
 
 
-fn second_part(lines: core::str::Lines) {
+fn solve_second_part(lines: core::str::Lines) {
     let mut position_passes: std::collections::HashMap<(i32, i32), u32> = std::collections::HashMap::new(); // the tuple stores (x,y) coordinates in that order
 
     lines.for_each(|line: &str| {
@@ -139,8 +139,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let file_contents: &str = file_contents.trim_end(); // remove last empty lines, if any. They do not add information and can cause confusion
     
-    first_part(file_contents.lines());
-    second_part(file_contents.lines());
+    solve_first_part(file_contents.lines());
+    solve_second_part(file_contents.lines());
 
     Ok(())
 }

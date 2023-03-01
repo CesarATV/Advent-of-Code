@@ -68,12 +68,12 @@ def monkey_math_operation(leftmost_number, rightmost_number, operation_type):
 
 
 
-def first_part(stacked_lines):
+def solve_first_part(stacked_lines):
     loop_got_stuck = False # variable use to avoid infinite loops, something that should never happen 
-    while(loop_got_stuck == False):
+    while loop_got_stuck == False:
 
         root_line = stacked_lines[stacked_lines.find(ROOT_MONKEY_NAME):].splitlines()[0].split(" ")
-        if (root_line[1].isnumeric() and root_line[3].isnumeric()):
+        if root_line[1].isnumeric() and root_line[3].isnumeric():
             break
 
         processed_lines = stacked_lines.splitlines()
@@ -81,43 +81,43 @@ def first_part(stacked_lines):
         for line in processed_lines:
             split_line = line.split(" ")
             monkey_name = split_line[0][:-1]
-            if(len(split_line)>2 and (not monkey_name.isnumeric())):
-                if (split_line[1].isnumeric() and split_line[3].isnumeric()):
+            if len(split_line)>2 and (not monkey_name.isnumeric()):
+                if split_line[1].isnumeric() and split_line[3].isnumeric():
                     
                     math_result = monkey_math_operation(int(split_line[1]), int(split_line[3]), split_line[2])
                     stacked_lines = stacked_lines.replace(monkey_name, str(math_result))
                     loop_got_stuck = False
 
-    if(loop_got_stuck == True):
+    if loop_got_stuck == True:
         print("This should never happen: the program ended in an infinite loop")
     else:
         math_result = monkey_math_operation(int(root_line[1]), int(root_line[3]), root_line[2])
         print("The monkey named", ROOT_MONKEY_NAME,  "will yell", math_result)
 
 
-def second_part(stacked_lines):
+def solve_second_part(stacked_lines):
     loop_got_stuck = False # in this case, the loop has to get stuck before leaving it
-    while(loop_got_stuck == False):
+    while loop_got_stuck == False:
         processed_lines = stacked_lines.splitlines()
         loop_got_stuck = True
         for line in processed_lines:
             split_line = line.split(" ")
             monkey_name = split_line[0][:-1]
-            if(len(split_line)>2 and (not monkey_name.isnumeric())):
-                if (split_line[1].isnumeric() and split_line[3].isnumeric()):
+            if len(split_line)>2 and (not monkey_name.isnumeric()):
+                if split_line[1].isnumeric() and split_line[3].isnumeric():
                     
                     math_result = monkey_math_operation(int(split_line[1]), int(split_line[3]), split_line[2])
 
-                    if (monkey_name != ROOT_MONKEY_NAME):
+                    if monkey_name != ROOT_MONKEY_NAME:
                         stacked_lines = stacked_lines.replace(monkey_name, str(math_result))
                     loop_got_stuck = False
 
 
     root_line = stacked_lines[stacked_lines.find(ROOT_MONKEY_NAME):].splitlines()[0].split(" ")
-    if (root_line[1].isnumeric() == True):
+    if root_line[1].isnumeric() == True:
         upper_math_result = root_line[3]
         lower_monkey_name = root_line[1]
-    elif(root_line[3].isnumeric() == True):
+    elif root_line[3].isnumeric() == True:
         upper_math_result = root_line[3]
         lower_monkey_name = root_line[1]
     else:
@@ -127,7 +127,7 @@ def second_part(stacked_lines):
 
     loop_got_stuck = False
     base_monkey_value_found = False
-    while(loop_got_stuck == False and base_monkey_value_found == False ):
+    while loop_got_stuck == False and base_monkey_value_found == False:
 
         processed_lines = stacked_lines.splitlines()
         loop_got_stuck = True
@@ -135,29 +135,29 @@ def second_part(stacked_lines):
             split_line = line.split(" ")
             monkey_name = split_line[0][:-1]
 
-            if(lower_monkey_name != monkey_name):
+            if lower_monkey_name != monkey_name:
                 continue
 
-            if (split_line[1].isnumeric()):
+            if split_line[1].isnumeric():
                 lower_monkey_name = split_line[3]
                 complementary_math_result = split_line[1]
                 lower_monkey_on_left_side = False
-            elif (split_line[3].isnumeric()):
+            elif split_line[3].isnumeric():
                 lower_monkey_name = split_line[1]
                 complementary_math_result = split_line[3]
                 lower_monkey_on_left_side = True
 
 
-            if(split_line[2] == "*"):
+            if split_line[2] == "*":
                 math_result = int(upper_math_result) // int(complementary_math_result)
-            elif(split_line[2] == "/"):
+            elif split_line[2] == "/":
                 math_result = int(upper_math_result) * int(complementary_math_result)
-            elif(split_line[2] == "-"):
-                if(lower_monkey_on_left_side == False):
+            elif split_line[2] == "-":
+                if lower_monkey_on_left_side == False:
                     math_result = int(complementary_math_result) - int(upper_math_result)
                 else:
                     math_result = int(upper_math_result) + int(complementary_math_result)
-            elif(split_line[2] == "+"):
+            elif split_line[2] == "+":
                 math_result = int(upper_math_result) - int(complementary_math_result)
             else:
                 print("Wrong math operator received. This line should have never been executed")
@@ -167,11 +167,11 @@ def second_part(stacked_lines):
             upper_math_result = str(math_result)
 
             loop_got_stuck = False
-            if(lower_monkey_name == "humn"):
+            if lower_monkey_name == NAME_CORRESPONDING_TO_YOU:
                 base_monkey_value_found = True
                 break
             
-    if(loop_got_stuck == True):
+    if loop_got_stuck == True:
         print("This should never happen: the program ended in an infinite loop")
     else:
         print("The number to be yelled is", math_result)
@@ -183,8 +183,8 @@ def main(file_name):
 
     stacked_lines, stacked_lines_part2 = parse_puzzle_file(file_contents)
 
-    first_part(stacked_lines)
-    second_part(stacked_lines_part2)
+    solve_first_part(stacked_lines)
+    solve_second_part(stacked_lines_part2)
 
 
 if __name__ == "__main__":

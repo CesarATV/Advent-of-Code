@@ -5,11 +5,12 @@ const N_DAYS_PART1: usize = 80;
 const N_DAYS_PART2: usize = 256;
 
 const NEW_BORN_TIMER: usize = 8 + 1;
-const RESETTED_TIMER: usize = 6 + 1;
-const LONGEST_TIMER: usize = if NEW_BORN_TIMER > RESETTED_TIMER {NEW_BORN_TIMER} else {RESETTED_TIMER};
-const SMALLEST_TIMER: usize = if NEW_BORN_TIMER > RESETTED_TIMER {RESETTED_TIMER} else {NEW_BORN_TIMER};
+const RESET_TIMER: usize = 6 + 1;
+const LONGEST_TIMER: usize = if NEW_BORN_TIMER > RESET_TIMER {NEW_BORN_TIMER} else {RESET_TIMER};
+const SMALLEST_TIMER: usize = if NEW_BORN_TIMER > RESET_TIMER {RESET_TIMER} else {NEW_BORN_TIMER};
 
-fn first_part(file_contents: &str, n_days: usize) {
+
+fn solve_first_part(file_contents: &str, n_days: usize) {
     let fishes_timer_lines: Vec<usize> = file_contents.split(",").map(|x: &str| x.parse::<usize>().expect("Not a number in file lines")).collect();
 
     let mut fish_array: [usize; LONGEST_TIMER] = [0; LONGEST_TIMER]; // the array contains the number of fish distributed by their reproduction period: The position that a number of fish occupy in the array represent the time they have left to procreate
@@ -35,10 +36,6 @@ fn first_part(file_contents: &str, n_days: usize) {
     println!("After {n_days} days there would be {n_fish} lanterfish");
 }
 
-fn second_part(file_contents: &str, n_days: usize){
-    //  This function is made just for consistency (having a first_parth and second_part functions in all files of the project), as it only calls first_part
-    first_part(file_contents, n_days);
-}
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let file_contents: String = match std::env::args().count() {
@@ -48,8 +45,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let file_contents: &str = file_contents.trim_end(); // remove last empty lines, if any. They do not add information and can cause confusion
     
-    first_part(file_contents, N_DAYS_PART1);
-    second_part(file_contents, N_DAYS_PART2);
+    solve_first_part(file_contents, N_DAYS_PART1);
+
+    let solve_second_part = solve_first_part;
+    solve_second_part(file_contents, N_DAYS_PART2);
 
     Ok(())
 }

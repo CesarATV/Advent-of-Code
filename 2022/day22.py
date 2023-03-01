@@ -72,13 +72,13 @@ def partially_parse_puzzle_file(lines):
     return initial_position, steps_instructions, blocked_paths, maze, n_rows, n_cols
 
 
-def parse_wrapping_points_and_orientations_first_part(maze, n_rows, n_cols):
+def parse_wrapping_points_and_orientations_for_first_part(maze, n_rows, n_cols):
     wrap_points_correspondences_right = {}
     wrap_points_correspondences_left = {}
     wrap_points_correspondences_up = {}
     wrap_points_correspondences_down = {}
 
-    # the use of orientation dictionaries for the first part of the puzzle seems a bit redundant (the orientation is mantained when wrapping). It is mostly used for consistency, using the same structur as for the second part of the puzzle
+    # the use of orientation dictionaries for the first part of the puzzle is a bit redundant (the orientation is mantained when wrapping). It is mostly used for consistency, using the same structure as for the second part of the puzzle
     wrap_points_orientations_right = {}
     wrap_points_orientations_left = {}
     wrap_points_orientations_up = {}
@@ -235,8 +235,8 @@ def follow_steps(initial_position, steps_instructions, blocked_paths, wrap_point
     return position, current_orientation
 
 
-def first_part(initial_position, steps_instructions, blocked_paths, maze, n_rows, n_cols):
-    wrap_points_correspondences, wrap_points_orientations = parse_wrapping_points_and_orientations_first_part(maze, n_rows, n_cols)
+def solve_first_part(initial_position, steps_instructions, blocked_paths, maze, n_rows, n_cols):
+    wrap_points_correspondences, wrap_points_orientations = parse_wrapping_points_and_orientations_for_first_part(maze, n_rows, n_cols)
 
     last_position, last_orientation = follow_steps(initial_position, steps_instructions, blocked_paths, wrap_points_correspondences, wrap_points_orientations)
 
@@ -246,7 +246,7 @@ def first_part(initial_position, steps_instructions, blocked_paths, maze, n_rows
     print("The final position is row {}, column {} and oriented {}, which gives the password {}".format(position_1_based[0], position_1_based[1], Orientation(last_orientation).name.lower(), password) )
 
 
-def parse_wrapping_points_and_orientations_second_part(lines):
+def parse_wrapping_points_and_orientations_for_second_part(lines):
     wrap_points_correspondences_right = {}
     wrap_points_correspondences_left = {}
     wrap_points_correspondences_up = {}
@@ -461,8 +461,8 @@ def parse_wrapping_points_and_orientations_second_part(lines):
     return wrap_points_correspondences, wrap_points_orientations
 
 
-def second_part(lines, initial_position, steps_instructions, blocked_paths):
-    wrap_points_correspondences, wrap_points_orientations = parse_wrapping_points_and_orientations_second_part(lines)
+def solve_second_part(lines, initial_position, steps_instructions, blocked_paths):
+    wrap_points_correspondences, wrap_points_orientations = parse_wrapping_points_and_orientations_for_second_part(lines)
 
     last_position, last_orientation = follow_steps(initial_position, steps_instructions, blocked_paths, wrap_points_correspondences, wrap_points_orientations)
 
@@ -480,8 +480,8 @@ def main(file_name):
 
     initial_position, steps_instructions, blocked_paths, maze, n_rows, n_cols = partially_parse_puzzle_file(lines)
 
-    first_part(initial_position, steps_instructions, blocked_paths, maze, n_rows, n_cols)
-    second_part(lines, initial_position, steps_instructions, blocked_paths)
+    solve_first_part(initial_position, steps_instructions, blocked_paths, maze, n_rows, n_cols)
+    solve_second_part(lines, initial_position, steps_instructions, blocked_paths)
 
 
 if __name__ == "__main__":

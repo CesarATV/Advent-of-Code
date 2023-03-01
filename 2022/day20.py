@@ -27,7 +27,7 @@ def parse_file_name():
         return args.file_name[1]
 
 
-def first_part(encrypted_file, unencrypted_line_indexes=None, print_result=True, extra_printing_string=""):
+def solve_first_part(encrypted_file, unencrypted_line_indexes=None, print_result=True, extra_printing_string=""):
     encryption_length = len(encrypted_file)
     if unencrypted_line_indexes == None:
         unencrypted_line_indexes = list(range(encryption_length)) # stores the original indexes of the file
@@ -36,11 +36,11 @@ def first_part(encrypted_file, unencrypted_line_indexes=None, print_result=True,
     for encrypted_file_idx in range(encryption_length):
         idx_list_idx = unencrypted_line_indexes.index(encrypted_file_idx) # get the index of the element in the encrypted file that is being processed, so it can show its current index in the variable that stores all initial indexes
         suggested_movement = encrypted_file[encrypted_file_idx]
-        if(suggested_movement < 0): 
+        if suggested_movement < 0: 
             # moves to the left
             movement = suggested_movement % - encryption_movement_limit 
 
-            if((movement+idx_list_idx) <= 0):
+            if (movement+idx_list_idx) <= 0:
                 # wraps to the left, so the movement has to become positive
                 movement = suggested_movement % encryption_movement_limit
                 unencrypted_line_indexes = unencrypted_line_indexes[:idx_list_idx] + unencrypted_line_indexes[idx_list_idx+1:idx_list_idx+1+movement] + [unencrypted_line_indexes[idx_list_idx]] + unencrypted_line_indexes[idx_list_idx+movement+1:]
@@ -50,7 +50,7 @@ def first_part(encrypted_file, unencrypted_line_indexes=None, print_result=True,
         else:
             # moves to the right
             movement = suggested_movement % encryption_movement_limit 
-            if((movement+idx_list_idx) > encryption_movement_limit):
+            if (movement+idx_list_idx) > encryption_movement_limit:
                 # wraps to the right, so the movement has to become negative
                 movement = movement % -encryption_movement_limit
                 unencrypted_line_indexes = unencrypted_line_indexes[:idx_list_idx+movement] + [unencrypted_line_indexes[idx_list_idx]] + unencrypted_line_indexes[idx_list_idx+movement:idx_list_idx] + unencrypted_line_indexes[idx_list_idx+1:]
@@ -77,15 +77,15 @@ def first_part(encrypted_file, unencrypted_line_indexes=None, print_result=True,
         return unencrypted_line_indexes
 
 
-def second_part(encrypted_file):
+def solve_second_part(encrypted_file):
     for idx in range(len(encrypted_file)):
         encrypted_file[idx] *= ENCRYPTION_KEY
 
     unencrypted_line_indexes = list(range(len(encrypted_file))) # stores the original indexes of the file
 
     for _ in range(N_MIXES-1):
-        unencrypted_line_indexes = first_part(encrypted_file, unencrypted_line_indexes, print_result=False)
-    first_part(encrypted_file, unencrypted_line_indexes, print_result=True, extra_printing_string="correct ")
+        unencrypted_line_indexes = solve_first_part(encrypted_file, unencrypted_line_indexes, print_result=False)
+    solve_first_part(encrypted_file, unencrypted_line_indexes, print_result=True, extra_printing_string="correct ")
 
 
 
@@ -96,8 +96,8 @@ def main(file_name):
         lines.pop()
 
     encrypted_file = list(map(int,lines))
-    first_part(encrypted_file)
-    second_part(encrypted_file)
+    solve_first_part(encrypted_file)
+    solve_second_part(encrypted_file)
 
 
 if __name__ == "__main__":

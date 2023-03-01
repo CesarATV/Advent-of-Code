@@ -17,7 +17,7 @@ def parse_file_name():
 
 
 
-def first_part(lines):
+def solve_first_part(lines):
     stack_list = [ [] for _ in range(9) ]
     for line_idx, line in enumerate(lines):
         if(line[1] == '1'):
@@ -47,14 +47,14 @@ def first_part(lines):
     print("After the rearrangement procedure the items on top are:", top_items)
 
 
-def second_part(lines):
+def solve_second_part(lines):
     stack_list = [ [] for _ in range(9) ]
     for line_idx, line in enumerate(lines):
         if(line[1] == '1'):
             break
 
         for list_idx in range(len(stack_list)):
-            if((1+list_idx*4) < len(line)):
+            if (1+list_idx*4) < len(line):
                 if(line[1+list_idx*4] != ' '):
                     stack_list[list_idx].insert(0,line[1+list_idx*4])
 
@@ -71,7 +71,7 @@ def second_part(lines):
             
     top_items = ''
     for idx in range(len(stack_list)):
-        if (len(stack_list[idx]) != 0):
+        if len(stack_list[idx]) != 0:
             top_items += stack_list[idx][-1]
         else: # No items on the stack
             top_items += ' ' # the instructions do not specify whether should be left blank or with space (or if this case may ever happen)
@@ -84,8 +84,8 @@ def main(file_name):
     while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
-    first_part(lines)
-    second_part(lines)
+    solve_first_part(lines)
+    solve_second_part(lines)
 
 
 if __name__ == "__main__":

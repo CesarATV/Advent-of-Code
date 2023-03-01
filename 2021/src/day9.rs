@@ -15,7 +15,7 @@ fn parse_puzzle_file(file_contents: &str) -> (Vec<u32>, usize, usize) {
 }
 
 
-fn first_part(heightmap: &Vec<u32>, n_rows: usize, n_cols: usize) {
+fn solve_first_part(heightmap: &Vec<u32>, n_rows: usize, n_cols: usize) {
     // this function will visit every single point in the heightmap and check its heigh in comparison to its neighbours. If a neighbour is considered taller or equal in size, this will be added to a hashmap in order to not be visited again, as this neighbour cannot be a lowerpoint. If all neighbours are taller, the current point is consiered a low point and its risk level is counted
 
     let mut visited_positions: std::collections::HashSet<usize> = std::collections::HashSet::new();
@@ -74,7 +74,7 @@ fn first_part(heightmap: &Vec<u32>, n_rows: usize, n_cols: usize) {
 }
 
 
-fn second_part(heightmap: Vec<u32>, n_rows: usize, n_cols: usize) {
+fn solve_second_part(heightmap: Vec<u32>, n_rows: usize, n_cols: usize) {
     // this function will visit every single point in the heightmap as long as its height is not NON_BASIN_HEIGHT. It will visit also its neighbours that do not have NON_BASIN_HEIGHT, and the neighbours without NON_BASIN_HEIGHT of these. All these not NON_BASIN_HEIGHT neighbours will be counted to compute the basin size. Once a basin runs out of neighbours, the function keeps continues checking every remaining point in the heightmap trying to find other basins. Once a position has been checked, it is added to visited_positions in order to not be checked again.
 
     let mut larger_basins: [u32; N_LARGER_BASINS] = [0; N_LARGER_BASINS];
@@ -159,8 +159,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let file_contents: &str = file_contents.trim_end(); // remove last empty lines, if any. They do not add information and can cause confusion
     
     let (heightmap, n_rows, n_cols): (Vec<u32>, usize, usize) = parse_puzzle_file(file_contents);
-    first_part(&heightmap, n_rows, n_cols);
-    second_part(heightmap, n_rows, n_cols);
+    solve_first_part(&heightmap, n_rows, n_cols);
+    solve_second_part(heightmap, n_rows, n_cols);
 
     Ok(())
 }

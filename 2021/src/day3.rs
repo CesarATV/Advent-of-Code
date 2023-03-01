@@ -7,7 +7,7 @@ enum BitCriteria {
 }
 
 
-fn first_part(file_contents: &str) {
+fn solve_first_part(file_contents: &str) {
     let n_columns: usize = file_contents.find("\n").expect("Input file does not contain breaklines");
     let file_contents: String = file_contents.replace("\n", "");
 
@@ -51,7 +51,7 @@ fn first_part(file_contents: &str) {
 }
 
 
-fn second_part(file_contents: &str) {
+fn solve_second_part(file_contents: &str) {
     let n_columns: usize = file_contents.find("\n").expect("Input file does not contain breaklines");
     let file_contents: String = file_contents.replace("\n", "");
     let numbers_vector: Vec<char> = file_contents.chars().collect();
@@ -120,8 +120,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
     let file_contents: &str = file_contents.trim_end(); // remove last empty lines, if any. They do not add information and can cause confusion
     
-    first_part(file_contents);
-    second_part(file_contents);
+    solve_first_part(file_contents);
+    solve_second_part(file_contents);
 
     Ok(())
 }

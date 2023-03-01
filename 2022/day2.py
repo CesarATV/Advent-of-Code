@@ -17,80 +17,80 @@ def parse_file_name():
 
 
 
-def first_part(lines):
+def solve_first_part(lines):
     # X is rock, Y is paper, Z is scissors
     total_score = 0
     for line in lines:
-        if(line[0] == "A"):
-            if(line[2] == "X"):
+        if line[0] == "A":
+            if line[2] == "X":
                 shape_score = 1
                 total_score += 3 + shape_score
-            elif(line[2] == "Y"):
+            elif line[2] == "Y":
                 shape_score = 2
                 total_score += 6 + shape_score
-            elif(line[2] == "Z"):
+            elif line[2] == "Z":
                 shape_score = 3
                 total_score += 0 + shape_score
                 
-        elif(line[0] == "B"):
-            if(line[2] == "X"):
+        elif line[0] == "B":
+            if line[2] == "X":
                 shape_score = 1
                 total_score += 0 + shape_score
-            elif(line[2] == "Y"):
+            elif line[2] == "Y":
                 shape_score = 2
                 total_score += 3 + shape_score
-            elif(line[2] == "Z"):
+            elif line[2] == "Z":
                 shape_score = 3
                 total_score += 6 + shape_score
 
-        elif(line[0] == "C"):
-            if(line[2] == "X"):
+        elif line[0] == "C":
+            if line[2] == "X":
                 shape_score = 1
                 total_score += 6 + shape_score
-            elif(line[2] == "Y"):
+            elif line[2] == "Y":
                 shape_score = 2
                 total_score += 0 + shape_score
-            elif(line[2] == "Z"):
+            elif line[2] == "Z":
                 shape_score = 3
                 total_score += 3 + shape_score
 
     print("The total score is", total_score, "according to the strategy guide")
 
 
-def second_part(lines):
+def solve_second_part(lines):
     # X is rock, Y is paper, Z is scissors
     total_score = 0
     for line in lines:
-        if(line[0] == "A"):
-            if(line[2] == "X"):
+        if line[0] == "A":
+            if line[2] == "X":
                 shape_score = 3
                 total_score += 0 + shape_score
-            elif(line[2] == "Y"):
+            elif line[2] == "Y":
                 shape_score = 1
                 total_score += 3 + shape_score
-            elif(line[2] == "Z"):
+            elif line[2] == "Z":
                 shape_score = 2
                 total_score += 6 + shape_score
                 
-        elif(line[0] == "B"):
-            if(line[2] == "X"):
+        elif line[0] == "B":
+            if line[2] == "X":
                 shape_score = 1
                 total_score += 0 + shape_score
-            elif(line[2] == "Y"):
+            elif line[2] == "Y":
                 shape_score = 2
                 total_score += 3 + shape_score
-            elif(line[2] == "Z"):
+            elif line[2] == "Z":
                 shape_score = 3
                 total_score += 6 + shape_score
 
-        elif(line[0] == "C"):
-            if(line[2] == "X"):
+        elif line[0] == "C":
+            if line[2] == "X":
                 shape_score = 2
                 total_score += 0 + shape_score
-            elif(line[2] == "Y"):
+            elif line[2] == "Y":
                 shape_score = 3
                 total_score += 3 + shape_score
-            elif(line[2] == "Z"):
+            elif line[2] == "Z":
                 shape_score = 1
                 total_score += 6 + shape_score
 
@@ -103,8 +103,8 @@ def main(file_name):
     while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
-    first_part(lines)
-    second_part(lines)
+    solve_first_part(lines)
+    solve_second_part(lines)
 
 
 if __name__ == "__main__":

@@ -141,7 +141,7 @@ def get_single_explorer_maximum_pressure(potential_paths_to_visit, initial_n_min
 
 
 
-def first_part(flow_rate_dict, valve_dict):
+def solve_first_part(flow_rate_dict, valve_dict):
     # sort the valve names by the flow they will release if activated from the starting valve. It can help to process first the valves most likely to be in the best possible path. This in turn will help to avoid processing extra non-optimal paths
     maximum_pressure_per_valve = [(N_MINUTES-1-valve_dict[STARTING_VALVE].valve_routes_dict[path_element])*x for x, path_element in zip(flow_rate_dict.values(),flow_rate_dict.keys())]
     potential_paths_to_visit = [flow_rate_name for _, flow_rate_name in sorted(zip(maximum_pressure_per_valve, flow_rate_dict.keys()),reverse=True)] # sort valves from most to least flow rate
@@ -156,7 +156,7 @@ def first_part(flow_rate_dict, valve_dict):
 
 
 
-def second_part(flow_rate_dict, valve_dict):
+def solve_second_part(flow_rate_dict, valve_dict):
     # sort the valve names by the flow they will release if activated from the starting valve. It can help to process first the valves most likely to be in the best possible path. This in turn will help to avoid processing extra non-optimal paths
     maximum_pressure_per_valve = [(N_MINUTES_GROUP_EXPLORING-1-valve_dict[STARTING_VALVE].valve_routes_dict[path_element])*x for x, path_element in zip(flow_rate_dict.values(),flow_rate_dict.keys())]
     potential_paths_to_visit = [flow_rate_name for _, flow_rate_name in sorted(zip(maximum_pressure_per_valve, flow_rate_dict.keys()),reverse=True)] # sort valves from most to least flow rate
@@ -211,8 +211,8 @@ def main(file_name):
     map_every_valve(flow_rate_dict, valve_dict)
 
 
-    first_part(flow_rate_dict, valve_dict)
-    second_part(flow_rate_dict, valve_dict)
+    solve_first_part(flow_rate_dict, valve_dict)
+    solve_second_part(flow_rate_dict, valve_dict)
 
 
 if __name__ == "__main__":

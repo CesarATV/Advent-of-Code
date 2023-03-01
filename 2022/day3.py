@@ -23,7 +23,7 @@ def parse_file_name():
 
 
 
-def first_part(lines):
+def solve_first_part(lines):
     total_priority_value = 0
     for line in lines:
         half_marker = len(line) // 2
@@ -36,10 +36,10 @@ def first_part(lines):
                 if(first_comp_letter == second_comp_letter):
                     same_letter = first_comp_letter
                     break
-            if(same_letter != ''):
+            if same_letter != '':
                 break
             
-        if(ord(same_letter) <= LAST_UPPERCASE_LETTER_INTEGER_VALUE):
+        if ord(same_letter) <= LAST_UPPERCASE_LETTER_INTEGER_VALUE:
             # capital letter
             total_priority_value += ord(same_letter) - SMALLEST_INTEGER_VALUE_FOR_UPPERCASE_LETTER + PRIORITY_UPPERCASE_LETTER
         else:
@@ -49,19 +49,19 @@ def first_part(lines):
     print("The total priority value of the items in common is", total_priority_value)
 
 
-def second_part(lines):
+def solve_second_part(lines):
     total_priority_value = 0
     group_counter = 0
     for line in lines:
-        if(group_counter == 0):
+        if group_counter == 0:
             line1 = line
             group_counter += 1
             continue
-        elif(group_counter == 1):
+        elif group_counter == 1:
             line2 = line
             group_counter += 1
             continue
-        elif(group_counter == 2):
+        elif group_counter == 2:
             line3 = line
             group_counter = 0
         
@@ -69,18 +69,18 @@ def second_part(lines):
         same_letter = ''
         for line1_letter in line1:
             for line2_letter in line2:
-                if(line1_letter == line2_letter):
+                if line1_letter == line2_letter:
                     for line3_letter in line3:
-                        if(line1_letter == line3_letter):
+                        if line1_letter == line3_letter:
                             same_letter = line1_letter
                             break
                 
-                if(same_letter != ''):
+                if same_letter != '':
                     break
-            if(same_letter != ''):
+            if same_letter != '':
                 break
                     
-        if(ord(same_letter) <= LAST_UPPERCASE_LETTER_INTEGER_VALUE):
+        if ord(same_letter) <= LAST_UPPERCASE_LETTER_INTEGER_VALUE:
             # capital letter
             total_priority_value += ord(same_letter) - SMALLEST_INTEGER_VALUE_FOR_UPPERCASE_LETTER + PRIORITY_UPPERCASE_LETTER
         else:
@@ -96,8 +96,8 @@ def main(file_name):
     while lines[-1] == "": # remove last empty lines, if any. They do not add information and can cause confusion
         lines.pop()
 
-    first_part(lines)
-    second_part(lines)
+    solve_first_part(lines)
+    solve_second_part(lines)
 
 
 if __name__ == "__main__":

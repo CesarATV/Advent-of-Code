@@ -39,22 +39,22 @@ class DeviceDirectory():
         while True:
             line = self.lines[self.line_idx]
             self.line_idx += 1 
-            if("$ cd" in line):
-                if("$ cd .." in line):
+            if "$ cd" in line:
+                if "$ cd .." in line:
                     if(current_size <= MAXIMUM_ALLOWED_SIZE):
                         self.accumulated_sizes += current_size
                     self.current_path = self.current_path[:self.current_path.rfind("/")]
                     return current_size
                 else:
-                    if(line[len("$ cd "):] != "/"):
+                    if line[len("$ cd "):] != "/":
                         self.current_path = self.current_path + "/" + line[len("$ cd "):]
                     subfolder_size = self.subfolder_size_count()
                     current_size += subfolder_size
-            elif("dir " not in line and "$ ls" not in line):
+            elif "dir " not in line and "$ ls" not in line:
                 current_size += int(line.split(" ")[0])
 
-            if(self.line_idx >= len(self.lines)):
-                if(current_size <= MAXIMUM_ALLOWED_SIZE):
+            if self.line_idx >= len(self.lines):
+                if current_size <= MAXIMUM_ALLOWED_SIZE:
                     self.accumulated_sizes += current_size
                 self.current_path = self.current_path[:self.current_path.rfind("/")]
                 return current_size
@@ -72,48 +72,48 @@ class DeviceDirectory():
         while True:
             line = self.lines[self.line_idx]
             self.line_idx += 1 
-            if("$ cd" in line):
-                if("$ cd .." in line):
-                    if(current_size >= self.space_to_delete and current_size < self.proposed_size_to_delete):
+            if "$ cd" in line:
+                if "$ cd .." in line:
+                    if current_size >= self.space_to_delete and current_size < self.proposed_size_to_delete:
                         self.proposed_size_to_delete = current_size
                     self.current_path = self.current_path[:self.current_path.rfind("/")]
                     return current_size
                 else:
-                    if(line[len("$ cd "):] != "/"):
+                    if line[len("$ cd "):] != "/":
                         self.current_path = self.current_path + "/" + line[len("$ cd "):]
                     subfolder_size = self.subfolder_search_for_space()
                     current_size += subfolder_size
-            elif("dir " not in line and "$ ls" not in line):
+            elif "dir " not in line and "$ ls" not in line:
                 current_size += int(line.split(" ")[0])
 
-            if(self.line_idx >= len(self.lines)):
-                if(current_size >= self.space_to_delete and current_size < self.proposed_size_to_delete):
+            if self.line_idx >= len(self.lines):
+                if current_size >= self.space_to_delete and current_size < self.proposed_size_to_delete:
                     self.proposed_size_to_delete = current_size
                 self.current_path = self.current_path[:self.current_path.rfind("/")]
                 return current_size
 
 
 
-def first_part(device_directory):
+def solve_first_part(device_directory):
     device_directory.prepare_subfolder_size_count()
     device_directory.used_space = device_directory.subfolder_size_count()
     print("The added size of the directories with a size of at most", MAXIMUM_ALLOWED_SIZE, "is", device_directory.accumulated_sizes)
  
 
-def second_part(device_directory):
+def solve_second_part(device_directory):
     if device_directory.used_space == None: # this variable should have set already in the first part
         device_directory.prepare_recursive_search()
         device_directory.used_space = device_directory.subfolder_size_count()
 
     space_to_delete = NECESSARY_SPACE - (MAXIMUM_SPACE - device_directory.used_space)
-    if(space_to_delete == 0):  
+    if space_to_delete == 0:  
         print("It is not necessary to delete a folder, there is enough space left")
 
     else:
         device_directory.prepare_subfolder_search_for_space(space_to_delete, MAXIMUM_SPACE)
         device_directory.subfolder_search_for_space()
 
-        if(space_to_delete > NECESSARY_SPACE):
+        if space_to_delete > NECESSARY_SPACE:
             print("No folder big enough to delete was found, at most one with size", device_directory.proposed_size_to_delete)
         else:
             print("It is proposed to delete a folder with size", device_directory.proposed_size_to_delete)
@@ -128,8 +128,8 @@ def main(file_name):
 
     device_directory = DeviceDirectory(lines)
 
-    first_part(device_directory)
-    second_part(device_directory)
+    solve_first_part(device_directory)
+    solve_second_part(device_directory)
 
 
 if __name__ == "__main__":
