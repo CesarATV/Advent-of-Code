@@ -1,0 +1,3 @@
+As mentioned in the README of the parent folder, the Go programs assume that there are files named *dayX.txt*, where *X* is the number of the puzzle, in the same folder as them. These files are read by default when executing the programs. All programs also can use other default example files (named *dayX_example.txt*) instead of the main defaults, by passing a single argument. If a second argument is given, this will be used as file path instead. 
+
+The programs assume then that they are being executed from the folder in which they are, unless the second argument with a file path is given. The reason for storing the programs in different folders, is because Go modules do not allow to have files with the same function names (such as *main*) in the same folder.
