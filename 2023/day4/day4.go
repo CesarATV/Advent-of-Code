@@ -14,7 +14,17 @@ const (
 	puzzleExampleInputFileName = "day4_example.txt"
 )
 
-func parsePuzzleFile(puzzleFile *os.File) ([]map[string]bool, [][]string, error) {
+func parsePuzzleFile(puzzleFilePath string) ([]map[string]bool, [][]string, error) {
+	var puzzleFile, err = os.Open(puzzleFilePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer func() {
+		if err = puzzleFile.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	var listOfScratchedNumbers []map[string]bool
 	var listOfWinningNumbers [][]string
 
@@ -41,7 +51,7 @@ func parsePuzzleFile(puzzleFile *os.File) ([]map[string]bool, [][]string, error)
 		listOfWinningNumbers = append(listOfWinningNumbers, winningNumbers)
 	}
 
-	var err = fileScanner.Err()
+	err = fileScanner.Err()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -56,7 +66,7 @@ func solveFirstPart(listOfScratchedNumbers []map[string]bool, listOfWinningNumbe
 		for _, winningNumber := range listOfWinningNumbers[idx] {
 			var _, isWinningNumberAScratchedOne = scratchedNumbers[winningNumber]
 			if isWinningNumberAScratchedOne == true {
-				nMatchingNumbers += 1
+				nMatchingNumbers++
 			}
 		}
 
@@ -81,7 +91,7 @@ func solveSecondPart(listOfScratchedNumbers []map[string]bool, listOfWinningNumb
 		for _, winningNumber := range listOfWinningNumbers[currentCardIdx] {
 			var _, isWinningNumberAScratchedOne = scratchedNumbers[winningNumber]
 			if isWinningNumberAScratchedOne == true {
-				nMatchingNumbers += 1
+				nMatchingNumbers++
 			}
 		}
 
@@ -103,27 +113,17 @@ func solveSecondPart(listOfScratchedNumbers []map[string]bool, listOfWinningNumb
 }
 
 func main() {
-	var filePath string
+	var puzzleFilePath string
 	switch len(os.Args) {
 	case 1:
-		filePath = puzzleInputFileName
+		puzzleFilePath = puzzleInputFileName
 	case 2:
-		filePath = puzzleExampleInputFileName
+		puzzleFilePath = puzzleExampleInputFileName
 	default:
-		filePath = os.Args[2]
+		puzzleFilePath = os.Args[2]
 	}
 
-	puzzleFile, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() {
-		if err := puzzleFile.Close(); err != nil {
-			log.Panicln(err)
-		}
-	}()
-
-	listOfScratchedNumbers, listOfWinningNumbers, err := parsePuzzleFile(puzzleFile)
+	listOfScratchedNumbers, listOfWinningNumbers, err := parsePuzzleFile(puzzleFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}

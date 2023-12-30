@@ -22,12 +22,22 @@ type scannedNumberParameters struct {
 	value                    uint
 }
 
-func parsePuzzleFile(file *os.File) ([][]scannedNumberParameters, [][]int, error) {
+func parsePuzzleFile(puzzleFilePath string) ([][]scannedNumberParameters, [][]int, error) {
+	var puzzleFile, err = os.Open(puzzleFilePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer func() {
+		if err = puzzleFile.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	var listOfScannedNumbers [][]scannedNumberParameters
 	listOfScannedNumbers = append(listOfScannedNumbers, nil) // add an initial empty row. This eases processing the list as a filter, avoiding the border cases
 	var listOfSymbolsXPositions [][]int
 
-	var fileScanner = bufio.NewScanner(file)
+	var fileScanner = bufio.NewScanner(puzzleFile)
 	for fileScanner.Scan() {
 		var fileline = fileScanner.Text()
 
@@ -67,7 +77,7 @@ func parsePuzzleFile(file *os.File) ([][]scannedNumberParameters, [][]int, error
 		listOfSymbolsXPositions = append(listOfSymbolsXPositions, symbolsXPositionsInCurrentlyLine)
 	}
 
-	var err = fileScanner.Err()
+	err = fileScanner.Err()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -85,7 +95,7 @@ func getPartNumberSumFromNearNumbers(symbolXPosition int, scannedNumbers *[]scan
 			sumOfPartNumbers += scannedNumber.value
 		} else {
 			(*scannedNumbers)[remadeSliceLength] = scannedNumber
-			remadeSliceLength += 1
+			remadeSliceLength++
 		}
 	}
 	(*scannedNumbers) = (*scannedNumbers)[:remadeSliceLength] // remove already counted part numbers
@@ -122,7 +132,7 @@ func getGearRatioFromNearNumbers(symbolXPosition int, scannedNumbers []scannedNu
 	for _, scannedNumber := range scannedNumbers {
 		if checkIfNumberIsAdjacent(symbolXPosition, scannedNumber) == true {
 			gearRatio *= scannedNumber.value
-			NumberOfAdjacentNumbers += 1
+			NumberOfAdjacentNumbers++
 		}
 	}
 	return gearRatio, NumberOfAdjacentNumbers
@@ -148,32 +158,22 @@ func solveSecondPart(listOfScannedNumbers [][]scannedNumberParameters, listOfSym
 }
 
 func main() {
-	var filePath string
+	var puzzleFilePath string
 	switch len(os.Args) {
 	case 1:
-		filePath = puzzleInputFileName
+		puzzleFilePath = puzzleInputFileName
 	case 2:
-		filePath = puzzleExampleInputFileName
+		puzzleFilePath = puzzleExampleInputFileName
 	default:
-		filePath = os.Args[2]
+		puzzleFilePath = os.Args[2]
 	}
 
-	var puzzleFile, err = os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() {
-		if closing_error := puzzleFile.Close(); closing_error != nil {
-			log.Panicln(closing_error)
-		}
-	}()
-
-	listOfScannedNumbers, listOfSymbolsXPositions, err := parsePuzzleFile(puzzleFile)
+	listOfScannedNumbers, listOfSymbolsXPositions, err := parsePuzzleFile(puzzleFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// solveFirstPart modifies listOfScannedNumbers, so making a copy of it is necessary. A smarter alternative would be just to execute the solveSecondPart before, but for meticulous organization reasons, an alternative is used.
+	// solveFirstPart modifies listOfScannedNumbers, so making a copy of it is necessary. A smarter alternative would be just to execute the solveSecondPart before, but for organization reasons, this is done
 	copyOfListOfScannedNumbers := make([][]scannedNumberParameters, len(listOfScannedNumbers))
 	for idx, scannedNumbers := range listOfScannedNumbers {
 		copyOfListOfScannedNumbers[idx] = make([]scannedNumberParameters, len(scannedNumbers))

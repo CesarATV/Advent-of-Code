@@ -36,6 +36,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"math/big"
 	"os"
@@ -49,9 +50,18 @@ const (
 	puzzleExampleInputFileName = "day9_example.txt"
 )
 
-func parsePuzzleFile(puzzleFile *os.File) ([][]*big.Int, error) {
-	var valuesHistories = [][]*big.Int{}
+func parsePuzzleFile(puzzleFilePath string) ([][]*big.Int, error) {
+	var puzzleFile, err = os.Open(puzzleFilePath)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err = puzzleFile.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
+	var valuesHistories = [][]*big.Int{}
 	var fileScanner = bufio.NewScanner(puzzleFile)
 	for fileScanner.Scan() {
 		var valueHistoryString = strings.Fields(fileScanner.Text())
@@ -62,20 +72,17 @@ func parsePuzzleFile(puzzleFile *os.File) ([][]*big.Int, error) {
 			if err != nil {
 				return nil, err
 			}
-
 			valueHistory = append(valueHistory, big.NewInt(int64(value)))
 		}
-
 		valuesHistories = append(valuesHistories, valueHistory)
 	}
 
-	var err = fileScanner.Err()
+	err = fileScanner.Err()
 	if err != nil {
 		return nil, err
 	}
 
 	return valuesHistories, nil
-
 }
 
 func getSumOfExtrapolatedValues(valuesHistories [][]*big.Int) *big.Int {
@@ -101,11 +108,11 @@ func getSumOfExtrapolatedValues(valuesHistories [][]*big.Int) *big.Int {
 	}
 
 	return sumOfExtrapolatedValues
-
 }
+
 func solveFirstPart(valuesHistories [][]*big.Int) {
 	var sumOfExtrapolatedValues = getSumOfExtrapolatedValues(valuesHistories)
-	println("The sum of the extrapolated values is", sumOfExtrapolatedValues.String())
+	fmt.Println("The sum of the extrapolated values is", sumOfExtrapolatedValues.String())
 }
 
 func solveSecondPart(valuesHistories [][]*big.Int) {
@@ -114,31 +121,21 @@ func solveSecondPart(valuesHistories [][]*big.Int) {
 	}
 
 	var sumOfReversedExtrapolatedValues = getSumOfExtrapolatedValues(valuesHistories)
-	println("Considering the previous values in the history, the sum of the extrapolated values is", sumOfReversedExtrapolatedValues.String())
+	fmt.Println("Considering the previous values in the history, the sum of the extrapolated values is", sumOfReversedExtrapolatedValues.String())
 }
 
 func main() {
-	var filePath string
+	var puzzleFilePath string
 	switch len(os.Args) {
 	case 1:
-		filePath = puzzleInputFileName
+		puzzleFilePath = puzzleInputFileName
 	case 2:
-		filePath = puzzleExampleInputFileName
+		puzzleFilePath = puzzleExampleInputFileName
 	default:
-		filePath = os.Args[2]
+		puzzleFilePath = os.Args[2]
 	}
 
-	puzzleFile, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() {
-		if err := puzzleFile.Close(); err != nil {
-			log.Panicln(err)
-		}
-	}()
-
-	valuesHistories, err := parsePuzzleFile(puzzleFile)
+	var valuesHistories, err = parsePuzzleFile(puzzleFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}

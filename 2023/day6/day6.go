@@ -31,7 +31,16 @@ const (
 	puzzleExampleInputFileName = "day6_example.txt"
 )
 
-func parsePuzzleFile(puzzleFile *os.File) ([]int, []int, int, int, error) {
+func parsePuzzleFile(puzzleFilePath string) ([]int, []int, int, int, error) {
+	var puzzleFile, err = os.Open(puzzleFilePath)
+	if err != nil {
+		return nil, nil, 0, 0, err
+	}
+	defer func() {
+		if err = puzzleFile.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
 
 	var fileScanner = bufio.NewScanner(puzzleFile)
 	if fileScanner.Scan() == false {
@@ -41,7 +50,7 @@ func parsePuzzleFile(puzzleFile *os.File) ([]int, []int, int, int, error) {
 	var raceDurationLine = strings.Split(fileScanner.Text(), ": ")[1]
 	var raceDurations []int
 	for _, raceDurationAsString := range strings.Fields(raceDurationLine) {
-		raceDuration, err := strconv.Atoi(raceDurationAsString)
+		var raceDuration, err = strconv.Atoi(raceDurationAsString)
 		if err != nil {
 			return nil, nil, 0, 0, err
 		}
@@ -49,7 +58,7 @@ func parsePuzzleFile(puzzleFile *os.File) ([]int, []int, int, int, error) {
 	}
 
 	var raceDurationWithGoodKerningString = strings.Replace(raceDurationLine, " ", "", -1)
-	var raceDurationWithGoodKerning, err = strconv.Atoi(raceDurationWithGoodKerningString)
+	raceDurationWithGoodKerning, err := strconv.Atoi(raceDurationWithGoodKerningString)
 	if err != nil {
 		return nil, nil, 0, 0, err
 	}
@@ -145,31 +154,21 @@ func solveSecondPart(raceDuration int, recordDistance int, getNumberOfWaysToBeat
 
 func main() {
 	var getNumberOfWaysToBeatRecord = getNumberOfWaysToBeatRecordAnalytically
-	var filePath string
+	var puzzleFilePath string
 	switch len(os.Args) {
 	case 1:
-		filePath = puzzleInputFileName
+		puzzleFilePath = puzzleInputFileName
 	case 2:
-		filePath = puzzleExampleInputFileName
+		puzzleFilePath = puzzleExampleInputFileName
 	case 4:
 		getNumberOfWaysToBeatRecord = getNumberOfWaysToBeatRecordByBruteForce
 		fmt.Println("It has been selected to solve the problem by brute force instead of analytically")
 		fallthrough
 	default:
-		filePath = os.Args[2]
+		puzzleFilePath = os.Args[2]
 	}
 
-	puzzleFile, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() {
-		if err := puzzleFile.Close(); err != nil {
-			log.Panicln(err)
-		}
-	}()
-
-	raceDurations, recordDistances, raceDurationWithGoodKerning, recordDistancesWithGoodKerning, err := parsePuzzleFile(puzzleFile)
+	raceDurations, recordDistances, raceDurationWithGoodKerning, recordDistancesWithGoodKerning, err := parsePuzzleFile(puzzleFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}

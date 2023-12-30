@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -14,6 +13,8 @@ import (
 const (
 	puzzleInputFileName        = "day7.txt"
 	puzzleExampleInputFileName = "day7_example.txt"
+
+	numberOfCardsInAHand = 5
 )
 
 // the order of these enumerations is intentional, from less valuable to less valuable card set
@@ -26,8 +27,6 @@ const (
 	fourOfAKind
 	fiveOfAKind
 )
-
-const numberOfCardsInAHand = 5
 
 type handDetailsStruct struct {
 	handType            int // will follow the previously declared enumeration
@@ -93,7 +92,7 @@ func selectHandType(handCount map[rune]uint, usingJokers bool) (int, error) {
 		handType = fiveOfAKind
 
 	default:
-		return 0, errors.New(fmt.Sprintf("File contains a file in the wrong format. It shows an impossible number of cards: %d", len(handCount)))
+		return 0, fmt.Errorf("File contains a file in the wrong format. It shows an impossible number of cards: %d", len(handCount))
 	}
 
 	return handType, nil
@@ -126,7 +125,17 @@ func getHandStrengthValue(hand string, usingJokers bool) [numberOfCardsInAHand]u
 	return handAsStrengthValue
 }
 
-func parsePuzzleFile(puzzleFile *os.File) ([]handDetailsStruct, []handDetailsStruct, error) {
+func parsePuzzleFile(puzzleFilePath string) ([]handDetailsStruct, []handDetailsStruct, error) {
+	var puzzleFile, err = os.Open(puzzleFilePath)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer func() {
+		if err = puzzleFile.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	var allHandDetailsFirstPart []handDetailsStruct
 	var allHandDetailsSecondPart []handDetailsStruct
 
@@ -161,7 +170,7 @@ func parsePuzzleFile(puzzleFile *os.File) ([]handDetailsStruct, []handDetailsStr
 		allHandDetailsSecondPart = append(allHandDetailsSecondPart, handDetailsStruct{handTypeSecondPart, bidAmount, handAsStrengthValueSecondPart})
 	}
 
-	var err = fileScanner.Err()
+	err = fileScanner.Err()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -188,7 +197,7 @@ func compareHands(firstHand handDetailsStruct, secondHand handDetailsStruct) int
 	return 0
 }
 
-func solveBothParts(allHandDetails []handDetailsStruct, considerJokerRule bool) {
+func calculateTotalWinnings(allHandDetails []handDetailsStruct, considerJokerRule bool) {
 	slices.SortFunc[[]handDetailsStruct](allHandDetails, compareHands) // sorts in ascending order
 
 	var totalWinnings = 0
@@ -197,41 +206,32 @@ func solveBothParts(allHandDetails []handDetailsStruct, considerJokerRule bool) 
 	}
 
 	if considerJokerRule == false {
-		println("The total winnings are", totalWinnings)
+		fmt.Println("The total winnings are", totalWinnings)
 	} else {
-		println("The total winnings are", totalWinnings, "when considering the joker rule")
+		fmt.Println("The total winnings are", totalWinnings, "when considering the joker rule")
 	}
 
 }
 
 func main() {
-	var filePath string
+	var puzzleFilePath string
 	switch len(os.Args) {
 	case 1:
-		filePath = puzzleInputFileName
+		puzzleFilePath = puzzleInputFileName
 	case 2:
-		filePath = puzzleExampleInputFileName
+		puzzleFilePath = puzzleExampleInputFileName
 	default:
-		filePath = os.Args[2]
+		puzzleFilePath = os.Args[2]
 	}
 
-	puzzleFile, err := os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() {
-		if err := puzzleFile.Close(); err != nil {
-			log.Panicln(err)
-		}
-	}()
-
-	allHandDetailsFirstPart, allHandDetailsSecondPart, err := parsePuzzleFile(puzzleFile)
+	var allHandDetailsFirstPart, allHandDetailsSecondPart, err = parsePuzzleFile(puzzleFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var solveFirstPart = solveBothParts
+	var solveFirstPart = calculateTotalWinnings
 	solveFirstPart(allHandDetailsFirstPart, false)
-	var solveSecondPart = solveBothParts
+
+	var solveSecondPart = calculateTotalWinnings
 	solveSecondPart(allHandDetailsSecondPart, true)
 }

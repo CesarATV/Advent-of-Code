@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -25,12 +24,21 @@ type cubedColor struct {
 	nBlueCubes  int
 }
 
-func parsePuzzleFile(puzzleFile *os.File) ([]cubedColor, error) {
+func parsePuzzleFile(puzzleFilePath string) ([]cubedColor, error) {
+	var puzzleFile, err = os.Open(puzzleFilePath)
+	if err != nil {
+		return nil, err
+	}
+	defer func() {
+		if err = puzzleFile.Close(); err != nil {
+			log.Println(err)
+		}
+	}()
+
 	var highestNCubesPerGame []cubedColor
 
 	var fileScanner = bufio.NewScanner(puzzleFile)
 	for fileScanner.Scan() {
-		var lineIdx = len(highestNCubesPerGame)
 		highestNCubesPerGame = append(highestNCubesPerGame, cubedColor{})
 
 		var fileLine = fileScanner.Text()
@@ -47,26 +55,26 @@ func parsePuzzleFile(puzzleFile *os.File) ([]cubedColor, error) {
 				var cubeColor = numberAndColor[1]
 				switch cubeColor {
 				case "red":
-					if highestNCubesPerGame[lineIdx].nRedCubes < numberOfCubes {
-						highestNCubesPerGame[lineIdx].nRedCubes = numberOfCubes
+					if highestNCubesPerGame[len(highestNCubesPerGame)-1].nRedCubes < numberOfCubes {
+						highestNCubesPerGame[len(highestNCubesPerGame)-1].nRedCubes = numberOfCubes
 					}
 				case "green":
-					if highestNCubesPerGame[lineIdx].nGreenCubes < numberOfCubes {
-						highestNCubesPerGame[lineIdx].nGreenCubes = numberOfCubes
+					if highestNCubesPerGame[len(highestNCubesPerGame)-1].nGreenCubes < numberOfCubes {
+						highestNCubesPerGame[len(highestNCubesPerGame)-1].nGreenCubes = numberOfCubes
 					}
 				case "blue":
-					if highestNCubesPerGame[lineIdx].nBlueCubes < numberOfCubes {
-						highestNCubesPerGame[lineIdx].nBlueCubes = numberOfCubes
+					if highestNCubesPerGame[len(highestNCubesPerGame)-1].nBlueCubes < numberOfCubes {
+						highestNCubesPerGame[len(highestNCubesPerGame)-1].nBlueCubes = numberOfCubes
 					}
 				default:
-					return nil, errors.New(fmt.Sprintf("Cube color different than red, green or blue found: %s", numberAndColor[1]))
+					return nil, fmt.Errorf("Cube color different than red, green or blue found: %s", numberAndColor[1])
 				}
 			}
 
 		}
 	}
 
-	var err = fileScanner.Err()
+	err = fileScanner.Err()
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +83,6 @@ func parsePuzzleFile(puzzleFile *os.File) ([]cubedColor, error) {
 }
 
 func solveFirstPart(highestNCubesPerGame []cubedColor) {
-
 	var sumIdsOfPossibleGames = 0
 	for gameIdx, highestNCubesInCurrentGame := range highestNCubesPerGame {
 		if highestNCubesInCurrentGame.nRedCubes <= maximumNumberOfRedCubes && highestNCubesInCurrentGame.nGreenCubes <= maximumNumberOfGreenCubes && highestNCubesInCurrentGame.nBlueCubes <= maximumNumberOfBlueCubes {
@@ -87,7 +94,6 @@ func solveFirstPart(highestNCubesPerGame []cubedColor) {
 }
 
 func solveSecondPart(highestNCubesPerGame []cubedColor) {
-
 	var sumOfCubePowers = 0
 	for _, highestNCubesInCurrentGame := range highestNCubesPerGame {
 		sumOfCubePowers += highestNCubesInCurrentGame.nRedCubes * highestNCubesInCurrentGame.nGreenCubes * highestNCubesInCurrentGame.nBlueCubes
@@ -96,27 +102,17 @@ func solveSecondPart(highestNCubesPerGame []cubedColor) {
 }
 
 func main() {
-	var filePath string
+	var puzzleFilePath string
 	switch len(os.Args) {
 	case 1:
-		filePath = puzzleInputFileName
+		puzzleFilePath = puzzleInputFileName
 	case 2:
-		filePath = puzzleExampleInputFileName
+		puzzleFilePath = puzzleExampleInputFileName
 	default:
-		filePath = os.Args[2]
+		puzzleFilePath = os.Args[2]
 	}
 
-	var puzzleFile, err = os.Open(filePath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer func() {
-		if err := puzzleFile.Close(); err != nil {
-			log.Panicln(err)
-		}
-	}()
-
-	highestNCubesPerGame, err := parsePuzzleFile(puzzleFile)
+	highestNCubesPerGame, err := parsePuzzleFile(puzzleFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}

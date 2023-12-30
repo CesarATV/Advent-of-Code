@@ -27,7 +27,7 @@ func solveFirstPart(fileLines []string) {
 		}
 
 		var lastDigit uint
-		for idx := len(fileLine) - 1; idx >= 0; idx-- {
+		for idx := len(fileLine) - 1; idx >= 0; idx-- { // iterate in reverse order
 			if unicode.IsDigit(rune(fileLine[idx])) {
 				lastDigit = uint(fileLine[idx] - '0')
 				break
@@ -67,7 +67,6 @@ func solveSecondPart(fileLines []string) {
 	}
 
 	for _, fileLine := range fileLines {
-
 		var smallestFirstDigitPosition = math.MaxInt
 		var firstDigit int
 		for _, possibleDigitString := range desiredDigitStrings {
@@ -98,23 +97,23 @@ func solveSecondPart(fileLines []string) {
 }
 
 func main() {
-	var filePath string
+	var puzzleFilePath string
 	switch len(os.Args) {
 	case 1:
-		filePath = puzzleInputFileName
+		puzzleFilePath = puzzleInputFileName
 	case 2:
-		filePath = puzzleExampleInputFileName
+		puzzleFilePath = puzzleExampleInputFileName
 	default:
-		filePath = os.Args[2]
+		puzzleFilePath = os.Args[2]
 	}
 
-	puzzleFile, err := os.Open(filePath)
+	var puzzleFile, err = os.Open(puzzleFilePath)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer func() {
-		if err := puzzleFile.Close(); err != nil {
-			log.Panicln(err)
+		if err = puzzleFile.Close(); err != nil {
+			log.Fatal(err)
 		}
 	}()
 
